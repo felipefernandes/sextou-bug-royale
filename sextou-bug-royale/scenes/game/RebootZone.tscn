@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3 uid="uid://reboot_zone_001"]
+
+[ext_resource type="Script" path="res://scenes/game/RebootZone.gd" id="1_reboot"]
+
+[node name="RebootZone" type="Node2D"]
+script = ExtResource("1_reboot")

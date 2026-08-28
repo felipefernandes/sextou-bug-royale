@@ -1,0 +1,8 @@
+[gd_resource type="FontVariation" load_steps=3 format=3 uid="uid://bgamefont001"]
+
+[ext_resource type="FontFile" uid="uid://gxcdq0h3hfn8" path="res://assets/fonts/PixelifySans-VariableFont_wght.ttf" id="1_pixel"]
+[ext_resource type="FontFile" uid="uid://6tistc6q8gs8" path="res://assets/fonts/NotoEmoji-Regular.ttf" id="2_emoji"]
+
+[resource]
+base_font = ExtResource("1_pixel")
+fallbacks = Array[Font]([ExtResource("2_emoji")])

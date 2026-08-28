@@ -1,0 +1,212 @@
+[gd_scene format=3 uid="uid://5t36x1ncbmyq"]
+
+[ext_resource type="Script" uid="uid://cul6mn6qcmlsv" path="res://scenes/entities/ChairPlayer.gd" id="1_chair"]
+[ext_resource type="Texture2D" uid="uid://dvk5yu5j4rihu" path="res://assets/d-players-spritesheet.png" id="2_csxly"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_chair"]
+radius = 22.0
+
+[sub_resource type="Animation" id="Animation_aah0f"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [0]
+}
+
+[sub_resource type="Animation" id="Animation_3t8db"]
+resource_name = "idle_down_front"
+length = 0.4
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [7]
+}
+
+[sub_resource type="Animation" id="Animation_cu6dk"]
+resource_name = "idle_left"
+length = 0.4
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [8]
+}
+
+[sub_resource type="Animation" id="Animation_7hnnk"]
+resource_name = "idle_up_back"
+length = 0.4
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [4]
+}
+
+[sub_resource type="Animation" id="Animation_x67s8"]
+resource_name = "move_down_front"
+length = 0.4
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.2),
+"transitions": PackedFloat32Array(1, 1),
+"update": 1,
+"values": [6, 7]
+}
+
+[sub_resource type="Animation" id="Animation_1127e"]
+resource_name = "move_left"
+length = 0.8
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.2, 0.4, 0.6),
+"transitions": PackedFloat32Array(1, 1, 1, 1),
+"update": 1,
+"values": [0, 1, 2, 3]
+}
+
+[sub_resource type="Animation" id="Animation_ju4ly"]
+resource_name = "move_up_back"
+length = 0.4
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.2),
+"transitions": PackedFloat32Array(1, 1),
+"update": 1,
+"values": [4, 5]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_3t8db"]
+_data = {
+&"RESET": SubResource("Animation_aah0f"),
+&"idle_down_front": SubResource("Animation_3t8db"),
+&"idle_left": SubResource("Animation_cu6dk"),
+&"idle_up_back": SubResource("Animation_7hnnk"),
+&"move_down_front": SubResource("Animation_x67s8"),
+&"move_left": SubResource("Animation_1127e"),
+&"move_up_back": SubResource("Animation_ju4ly")
+}
+
+[node name="ChairPlayer" type="CharacterBody2D" unique_id=1670795361]
+collision_layer = 2
+collision_mask = 7
+script = ExtResource("1_chair")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1296681744]
+shape = SubResource("CircleShape2D_chair")
+
+[node name="ChairVisual" type="ColorRect" parent="." unique_id=1316814185]
+visible = false
+offset_left = -18.0
+offset_top = -18.0
+offset_right = 18.0
+offset_bottom = 18.0
+color = Color(0.2, 0.4, 0.7, 1)
+
+[node name="ChairSeat" type="ColorRect" parent="ChairVisual" unique_id=1488791079]
+visible = false
+layout_mode = 0
+offset_left = 4.0
+offset_top = 4.0
+offset_right = 32.0
+offset_bottom = 32.0
+color = Color(0.1, 0.25, 0.5, 1)
+
+[node name="Camera2D" type="Camera2D" parent="." unique_id=644832092]
+limit_left = 0
+limit_top = 0
+limit_right = 2560
+limit_bottom = 1440
+position_smoothing_enabled = true
+position_smoothing_speed = 6.0
+
+[node name="GunAnchor" type="Node2D" parent="." unique_id=2050994987]
+
+[node name="GunVisual" type="ColorRect" parent="GunAnchor" unique_id=1716444166]
+offset_left = 10.0
+offset_top = -3.0
+offset_right = 26.0
+offset_bottom = 3.0
+color = Color(0.3, 0.3, 0.3, 1)
+
+[node name="Muzzle" type="Marker2D" parent="GunAnchor" unique_id=646259366]
+position = Vector2(28, 0)
+
+[node name="PostItsContainer" type="Node2D" parent="." unique_id=1850749794]
+
+[node name="PostIt1" type="ColorRect" parent="PostItsContainer" unique_id=1210115365]
+offset_left = -16.0
+offset_top = -14.0
+offset_right = -8.0
+offset_bottom = -6.0
+color = Color(0.95, 0.9, 0.2, 1)
+
+[node name="PostIt2" type="ColorRect" parent="PostItsContainer" unique_id=1579730202]
+offset_left = -16.0
+offset_top = -4.0
+offset_right = -8.0
+offset_bottom = 4.0
+color = Color(0.95, 0.9, 0.2, 1)
+
+[node name="PostIt3" type="ColorRect" parent="PostItsContainer" unique_id=1351159803]
+offset_left = -16.0
+offset_top = 6.0
+offset_right = -8.0
+offset_bottom = 14.0
+color = Color(0.95, 0.9, 0.2, 1)
+
+[node name="ChairPlayerSprite" type="Sprite2D" parent="." unique_id=226837662]
+position = Vector2(1, 0)
+scale = Vector2(0.12, 0.12)
+texture = ExtResource("2_csxly")
+hframes = 9
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="ChairPlayerSprite" unique_id=1059828208]
+libraries/ = SubResource("AnimationLibrary_3t8db")
