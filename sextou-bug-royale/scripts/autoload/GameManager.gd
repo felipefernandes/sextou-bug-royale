@@ -56,3 +56,13 @@ func set_control_mode(mode: ControlMode, role: PartnerRole = PartnerRole.PLAYER_
 	current_control_mode = mode
 	partner_role = role
 	print("[GameManager] Modo alterado para: ", ControlMode.keys()[current_control_mode])
+
+func play_sfx(path: String, volume_db: float = 0.0) -> void:
+	var stream = load(path)
+	if not stream: return
+	var player = AudioStreamPlayer.new()
+	player.stream = stream
+	player.volume_db = volume_db
+	player.finished.connect(player.queue_free)
+	add_child(player)
+	player.play()
