@@ -278,12 +278,41 @@ func take_damage(amount: int) -> void:
 		item_changed.emit("NENHUM (ESCUDO UTILIZADO)")
 		return
 
-	post_it_hp -= amount
+	post_it_hp = max(0, post_it_hp - amount)
 	hp_changed.emit(post_it_hp)
 	_update_post_its_visual()
+	_play_hit_feedback()
+	_spawn_damage_indicator()
+	
+	if NetworkManager.is_connected_to_ws and not NetworkManager.local_player_id.is_empty():
+		NetworkManager.send_hit(NetworkManager.local_player_id, post_it_hp)
 	
 	if post_it_hp <= 0:
 		die()
+
+func _play_hit_feedback() -> void:
+	var flash_target = chair_sprite if chair_sprite else self
+	var orig_mod = flash_target.modulate
+	flash_target.modulate = Color(1.8, 0.3, 0.3, 1.0)
+	var tween = create_tween()
+	tween.tween_property(flash_target, "modulate", orig_mod, 0.2)
+
+func _spawn_damage_indicator() -> void:
+	var dmg_label = Label.new()
+	dmg_label.text = "-1 📄"
+	dmg_label.modulate = Color(1.0, 0.3, 0.3, 1.0)
+	dmg_label.position = Vector2(-20, -55)
+	var font_pixel = load("res://assets/fonts/PressStart2P-Regular.ttf") as Font
+	if font_pixel:
+		dmg_label.add_theme_font_override("font", font_pixel)
+		dmg_label.add_theme_font_size_override("font_size", 10)
+	add_child(dmg_label)
+	
+	var tween = create_tween()
+	tween.set_parallel(true)
+	tween.tween_property(dmg_label, "position:y", dmg_label.position.y - 30.0, 0.5)
+	tween.tween_property(dmg_label, "modulate:a", 0.0, 0.5)
+	tween.chain().tween_callback(dmg_label.queue_free)
 
 func die() -> void:
 	chair_destroyed.emit(self)

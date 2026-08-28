@@ -342,13 +342,20 @@ func _on_remote_player_shot(p_id: String, pos: Vector2, dir: Vector2, _item_type
 		var shooter_node = remote_players.get(p_id, null)
 		bullet_inst.setup(pos, dir, shooter_node)
 
-func _on_remote_player_hit(target_id: String, _attacker_id: String, _remaining_hp: int) -> void:
+func _on_remote_player_hit(target_id: String, _attacker_id: String, remaining_hp: int) -> void:
 	if target_id == NetworkManager.local_player_id and is_instance_valid(local_player):
 		local_player.take_damage(1)
 	elif remote_players.has(target_id):
 		var remote_inst = remote_players[target_id] as RemotePlayer
 		if is_instance_valid(remote_inst):
-			remote_inst.apply_damage(1)
+			remote_inst.post_it_hp = remaining_hp
+			remote_inst._update_post_its()
+			remote_inst._update_nameplate_text()
+			remote_inst._play_hit_feedback()
+			remote_inst._spawn_damage_indicator()
+			if remote_inst.post_it_hp <= 0:
+				remote_players.erase(target_id)
+				_check_match_status()
 
 func _on_remote_player_eliminated(p_id: String) -> void:
 	if remote_players.has(p_id):
