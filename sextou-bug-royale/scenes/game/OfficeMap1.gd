@@ -187,7 +187,9 @@ func _setup_match() -> void:
 			if net_players[i] is Dictionary and net_players[i].get("id", "") == NetworkManager.local_player_id:
 				local_idx = i
 				break
-		local_spawn_pos = SPAWN_CORNERS[local_idx % SPAWN_CORNERS.size()]
+		var loop_count = local_idx / SPAWN_CORNERS.size()
+		var offset = Vector2(loop_count * 60, loop_count * 60)
+		local_spawn_pos = SPAWN_CORNERS[local_idx % SPAWN_CORNERS.size()] + offset
 	
 	local_player = chair_scene.instantiate() as ChairPlayer
 	local_player.global_position = local_spawn_pos
@@ -211,7 +213,9 @@ func _setup_match() -> void:
 				remote_inst.nickname = p_dict.get("nickname", "RemoteDev")
 				remote_inst.skin_key = p_dict.get("skin", "DEV")
 				
-				var remote_spawn_pos = SPAWN_CORNERS[i % SPAWN_CORNERS.size()]
+				var loop_count = i / SPAWN_CORNERS.size()
+				var offset = Vector2(loop_count * 60, loop_count * 60)
+				var remote_spawn_pos = SPAWN_CORNERS[i % SPAWN_CORNERS.size()] + offset
 				remote_inst.global_position = remote_spawn_pos
 					
 				remote_inst.add_to_group("players")

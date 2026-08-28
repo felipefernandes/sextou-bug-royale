@@ -272,6 +272,7 @@ func trigger_boost() -> void:
 	boost_cooldown_timer = boost_cooldown
 
 func sync_hp(new_hp: int) -> void:
+	if invulnerable_timer > 0: return
 	if post_it_hp <= new_hp: return
 	post_it_hp = new_hp
 	hp_changed.emit(post_it_hp)

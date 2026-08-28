@@ -17,6 +17,7 @@ var target_rotation: float = 0.0
 var target_gun_rotation: float = 0.0
 var post_it_hp: int = 3
 var is_spectator_visible: bool = false
+var invulnerable_timer: float = 2.0
 
 func _ready() -> void:
 	target_position = global_position
@@ -61,6 +62,12 @@ func update_transform_data(pos: Vector2, rot: float, gun_rot: float) -> void:
 	target_gun_rotation = gun_rot
 
 func _physics_process(delta: float) -> void:
+	if invulnerable_timer > 0:
+		invulnerable_timer -= delta
+		modulate.a = 0.5 if fmod(invulnerable_timer * 10.0, 2.0) > 1.0 else 1.0
+	else:
+		modulate.a = 1.0
+
 	global_position = global_position.lerp(target_position, 18.0 * delta)
 	rotation = lerp_angle(rotation, target_rotation, 18.0 * delta)
 	if gun_anchor:
@@ -73,6 +80,7 @@ func take_damage(amount: int) -> void:
 		NetworkManager.send_hit(player_id, post_it_hp)
 
 func apply_damage(amount: int) -> void:
+	if invulnerable_timer > 0: return
 	post_it_hp = max(0, post_it_hp - amount)
 	_update_post_its()
 	_update_nameplate_text()
