@@ -78,6 +78,7 @@ func apply_damage(amount: int) -> void:
 	_update_nameplate_text()
 	_play_hit_feedback()
 	_spawn_damage_indicator()
+	GameManager.play_sfx("res://assets/sfx/Sound FX Starter Pack Vol. 1/Retro/Damage.wav")
 	
 	if post_it_hp <= 0:
 		chair_destroyed.emit(self)

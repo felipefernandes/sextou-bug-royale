@@ -185,6 +185,8 @@ func shoot() -> void:
 	fire_cooldown_timer = fire_rate
 	var shoot_dir = Vector2.RIGHT.rotated(gun_anchor.global_rotation)
 	
+	GameManager.play_sfx("res://assets/sfx/Sound FX Starter Pack Vol. 1/Retro/Attack.wav", -12.0)
+	
 	if NetworkManager.is_connected_to_ws and not is_in_group("bots"):
 		NetworkManager.send_shoot(muzzle.global_position, shoot_dir, equipped_item)
 	
@@ -283,6 +285,7 @@ func take_damage(amount: int) -> void:
 	_update_post_its_visual()
 	_play_hit_feedback()
 	_spawn_damage_indicator()
+	GameManager.play_sfx("res://assets/sfx/Sound FX Starter Pack Vol. 1/Retro/Damage.wav")
 	
 	if NetworkManager.is_connected_to_ws and not NetworkManager.local_player_id.is_empty():
 		# Evitar que BotPlayers disparem hit para o NetworkManager do jogador local
