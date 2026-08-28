@@ -1,0 +1,24 @@
+[remap]
+
+importer="wav"
+type="AudioStreamWAV"
+uid="uid://ccxco2762puf3"
+path="res://.godot/imported/Whoosh Medieval.wav-c4e460cd8de21a459ca62f81168e683f.sample"
+
+[deps]
+
+source_file="res://assets/sfx/Sound FX Starter Pack Vol. 1/Motions and Impacts/Whoosh Medieval.wav"
+dest_files=["res://.godot/imported/Whoosh Medieval.wav-c4e460cd8de21a459ca62f81168e683f.sample"]
+
+[params]
+
+force/8_bit=false
+force/mono=false
+force/max_rate=false
+force/max_rate_hz=44100
+edit/trim=false
+edit/normalize=false
+edit/loop_mode=0
+edit/loop_begin=0
+edit/loop_end=-1
+compress/mode=2

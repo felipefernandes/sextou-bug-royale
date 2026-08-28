@@ -1,0 +1,24 @@
+[remap]
+
+importer="wav"
+type="AudioStreamWAV"
+uid="uid://djycou2k3rku5"
+path="res://.godot/imported/Wind Of Rotting.wav-3aaae8dba326179cd32c8786723791ce.sample"
+
+[deps]
+
+source_file="res://assets/sfx/Sound FX Starter Pack Vol. 1/Horror/Wind Of Rotting.wav"
+dest_files=["res://.godot/imported/Wind Of Rotting.wav-3aaae8dba326179cd32c8786723791ce.sample"]
+
+[params]
+
+force/8_bit=false
+force/mono=false
+force/max_rate=false
+force/max_rate_hz=44100
+edit/trim=false
+edit/normalize=false
+edit/loop_mode=0
+edit/loop_begin=0
+edit/loop_end=-1
+compress/mode=2

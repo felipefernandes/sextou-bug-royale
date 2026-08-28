@@ -1,0 +1,24 @@
+[remap]
+
+importer="wav"
+type="AudioStreamWAV"
+uid="uid://bk016lh7x2w0f"
+path="res://.godot/imported/Rails Loop.wav-26dd4d9810f0f5cb613a1e234839cdef.sample"
+
+[deps]
+
+source_file="res://assets/sfx/Sound FX Starter Pack Vol. 1/Steampunk/Rails Loop.wav"
+dest_files=["res://.godot/imported/Rails Loop.wav-26dd4d9810f0f5cb613a1e234839cdef.sample"]
+
+[params]
+
+force/8_bit=false
+force/mono=false
+force/max_rate=false
+force/max_rate_hz=44100
+edit/trim=false
+edit/normalize=false
+edit/loop_mode=0
+edit/loop_begin=0
+edit/loop_end=-1
+compress/mode=2

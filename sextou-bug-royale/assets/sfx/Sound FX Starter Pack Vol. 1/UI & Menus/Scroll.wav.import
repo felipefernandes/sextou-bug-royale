@@ -1,0 +1,24 @@
+[remap]
+
+importer="wav"
+type="AudioStreamWAV"
+uid="uid://br7x6txr2o53j"
+path="res://.godot/imported/Scroll.wav-edbe4fe07aec151a7e13a314acea0a1d.sample"
+
+[deps]
+
+source_file="res://assets/sfx/Sound FX Starter Pack Vol. 1/UI & Menus/Scroll.wav"
+dest_files=["res://.godot/imported/Scroll.wav-edbe4fe07aec151a7e13a314acea0a1d.sample"]
+
+[params]
+
+force/8_bit=false
+force/mono=false
+force/max_rate=false
+force/max_rate_hz=44100
+edit/trim=false
+edit/normalize=false
+edit/loop_mode=0
+edit/loop_begin=0
+edit/loop_end=-1
+compress/mode=2
