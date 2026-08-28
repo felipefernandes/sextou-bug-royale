@@ -10,8 +10,14 @@ signal remote_player_eliminated(player_id: String)
 signal box_opened_synced(box_id: String, new_pos: Vector2, item_type: String)
 signal cold_start_progress(message: String)
 
-var server_http_url: String = "http://localhost:3000/health"
-var server_ws_url: String = "ws://localhost:3000"
+const PROD_HTTP_URL: String = "https://sextou-bug-royale.onrender.com/health"
+const PROD_WS_URL: String = "wss://sextou-bug-royale.onrender.com"
+
+const LOCAL_HTTP_URL: String = "http://localhost:3000/health"
+const LOCAL_WS_URL: String = "ws://localhost:3000"
+
+var server_http_url: String = PROD_HTTP_URL
+var server_ws_url: String = PROD_WS_URL
 
 var ws_peer: WebSocketPeer = WebSocketPeer.new()
 var is_connected_to_ws: bool = false
@@ -21,6 +27,30 @@ var last_room_state: Dictionary = {}
 
 func _ready() -> void:
 	set_process(false)
+	_configure_environment_urls()
+
+func _configure_environment_urls() -> void:
+	if OS.has_feature("editor"):
+		server_http_url = LOCAL_HTTP_URL
+		server_ws_url = LOCAL_WS_URL
+	elif OS.has_feature("web"):
+		var hostname: String = ""
+		if ClassDB.class_exists("JavaScriptBridge"):
+			var js_host = JavaScriptBridge.eval("window.location.hostname", true)
+			if js_host != null:
+				hostname = str(js_host)
+		
+		if hostname == "localhost" or hostname == "127.0.0.1":
+			server_http_url = LOCAL_HTTP_URL
+			server_ws_url = LOCAL_WS_URL
+		else:
+			server_http_url = PROD_HTTP_URL
+			server_ws_url = PROD_WS_URL
+	else:
+		server_http_url = PROD_HTTP_URL
+		server_ws_url = PROD_WS_URL
+	
+	print("[NetworkManager] Conexão configurada: HTTP=", server_http_url, " | WS=", server_ws_url)
 
 func perform_cold_start_handshake() -> void:
 	cold_start_progress.emit("Conectando aos servidores da firma... (Acordando o TI)")

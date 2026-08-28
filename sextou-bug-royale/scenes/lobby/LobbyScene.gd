@@ -69,6 +69,11 @@ func _connect_signals() -> void:
 	NetworkManager.room_state_updated.connect(_on_room_state_updated)
 	NetworkManager.match_started.connect(_on_match_started)
 	NetworkManager.connection_established.connect(_on_connection_established)
+	NetworkManager.cold_start_progress.connect(_on_cold_start_progress)
+
+func _on_cold_start_progress(message: String) -> void:
+	if not NetworkManager.is_connected_to_ws:
+		players_list_label.text = "[color=#F39C12][b]⏳ STATUS DA FIRMA:[/b][/color]\n\n" + message
 
 func _on_connection_established(p_id: String, is_host: bool) -> void:
 	nickname_input.text = "Player_" + p_id
