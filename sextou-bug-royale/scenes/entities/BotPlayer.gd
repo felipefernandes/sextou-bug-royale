@@ -15,6 +15,7 @@ var patrol_timer: float = 0.0
 var patrol_dir: Vector2 = Vector2.RIGHT
 
 func _ready() -> void:
+	add_to_group("bots")
 	super._ready()
 	# Bots não possuem invulnerabilidade de spawn
 	invulnerable_timer = 0.0

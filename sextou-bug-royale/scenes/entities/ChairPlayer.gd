@@ -285,7 +285,9 @@ func take_damage(amount: int) -> void:
 	_spawn_damage_indicator()
 	
 	if NetworkManager.is_connected_to_ws and not NetworkManager.local_player_id.is_empty():
-		NetworkManager.send_hit(NetworkManager.local_player_id, post_it_hp)
+		# Evitar que BotPlayers disparem hit para o NetworkManager do jogador local
+		if not is_in_group("bots"):
+			NetworkManager.send_hit(NetworkManager.local_player_id, post_it_hp)
 	
 	if post_it_hp <= 0:
 		die()
