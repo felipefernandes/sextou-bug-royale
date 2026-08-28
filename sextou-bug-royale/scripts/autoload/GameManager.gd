@@ -19,7 +19,8 @@ var player_nickname: String = "Estagiário"
 var selected_avatar: String = "player_char_001.png"
 
 var maps_list: Array[String] = [
-	"res://scenes/game/OfficeMap1.tscn"
+	"res://scenes/game/OfficeMap1.tscn",
+	"res://scenes/game/OfficeMap2.tscn"
 ]
 
 func get_random_map_scene() -> String:

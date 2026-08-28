@@ -29,9 +29,12 @@ Este documento estabelece o plano de desenvolvimento em **ondas funcionais e inc
 ## 🌊 Onda 2: Caixas de Deploy, Armas, Habilidades & Zona de Reboot
 > **Objetivo:** Adicionar o ecossistema completo de combate corporativo, itens estilo "Mario Kart" e o encolhimento do mapa.
 
-- [x] **2.1 Labirinto de Escritório (TileMap 2D Ortogonal):**
-  - Construir o mapa usando os assets de [assets/kenney_RPGurbanPack](file:///c:/Users/felip/OneDrive/Documents/Projects/sextou-bug-royale/assets/kenney_RPGurbanPack) e [assets/Tech Dungeon Roguelite - Asset Pack (DEMO)](file:///c:/Users/felip/OneDrive/Documents/Projects/sextou-bug-royale/assets/Tech%20Dungeon%20Roguelite%20-%20Asset%20Pack%20(DEMO)).
-  - Baias de trabalho, corredores, divisórias destrutíveis e áreas de café.
+- [x] **2.1 Labirinto de Escritório & Rotação de Mapas (TileMap 2D Ortogonal):**
+  - Construir o mapa base usando os assets de [assets/kenney_RPGurbanPack](file:///c:/Users/felip/OneDrive/Documents/Projects/sextou-bug-royale/assets/kenney_RPGurbanPack) e [assets/Tech Dungeon Roguelite - Asset Pack (DEMO)](file:///c:/Users/felip/OneDrive/Documents/Projects/sextou-bug-royale/assets/Tech%20Dungeon%20Roguelite%20-%20Asset%20Pack%20(DEMO)).
+  - Suporte a múltiplos mapas e rotação no `GameManager`:
+    - `OfficeMap1.tscn` (Escritório Central / Baias & Convivência).
+    - `OfficeMap2.tscn` (Data Center & Sala de Servidores com Mainframe Core, NOC e Corredores de Racks).
+  - Baias de trabalho, corredores, divisórias e áreas de café.
   - `NavigationRegion2D` para pathfinding dos bots.
 - [x] **2.2 Caixas de Deploy ("Loot Boxes"):**
   - Spawn aleatório de caixas pelo escritório.
