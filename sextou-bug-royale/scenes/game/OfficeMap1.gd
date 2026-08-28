@@ -1,7 +1,5 @@
 extends Node2D
 
-@onready var player_spawn: Marker2D = $Spawns/PlayerSpawn
-@onready var bot_spawns_container: Node2D = $Spawns/BotSpawns
 @onready var partitions_container: Node2D = $Walls
 @onready var hp_label: Label = $CanvasLayer.find_child("HpLabel", true, false) as Label
 @onready var item_label: Label = $CanvasLayer.find_child("ItemLabel", true, false) as Label
@@ -20,6 +18,18 @@ var bot_scene: PackedScene = preload("res://scenes/entities/BotPlayer.tscn")
 var remote_player_scene: PackedScene = preload("res://scenes/entities/RemotePlayer.tscn")
 var default_bullet_scene: PackedScene = preload("res://scenes/entities/Bullet.tscn")
 
+# 8 Pontos de Spawn nas Extremidades e Cantos do Mapa do Escritório
+const SPAWN_CORNERS: Array[Vector2] = [
+	Vector2(180, 140),   # 0: Noroeste (Canto Superior Esquerdo)
+	Vector2(2360, 140),  # 1: Nordeste (Canto Superior Direito)
+	Vector2(180, 1260),  # 2: Sudoeste (Canto Inferior Esquerdo)
+	Vector2(2360, 1260), # 3: Sudeste (Canto Inferior Direito)
+	Vector2(1280, 140),  # 4: Norte Central
+	Vector2(1280, 1260), # 5: Sul Central
+	Vector2(180, 700),   # 6: Oeste Central
+	Vector2(2360, 700)   # 7: Leste Central
+]
+
 var local_player: ChairPlayer = null
 var active_bots: Array[BotPlayer] = []
 var remote_players: Dictionary = {} # player_id -> RemotePlayer
@@ -29,6 +39,10 @@ var is_returning_to_lobby: bool = false
 
 var match_duration: float = 180.0 # 3 minutos até as 18h
 var match_timer: float = 0.0
+
+var spectator_camera: Camera2D = null
+var spectator_target_index: int = 0
+var minimap_radar: MinimapRadar = null
 
 func _ready() -> void:
 	dark_overlay.visible = false
@@ -70,10 +84,6 @@ func _apply_fonts() -> void:
 		if info_label:
 			info_label.add_theme_font_override("font", font_audio)
 			info_label.add_theme_font_size_override("font_size", 12)
-
-var spectator_camera: Camera2D = null
-var spectator_target_index: int = 0
-var minimap_radar: MinimapRadar = null
 
 func _unhandled_input(event: InputEvent) -> void:
 	if event is InputEventKey and event.pressed:
@@ -141,6 +151,7 @@ func _process(delta: float) -> void:
 	if not is_returning_to_lobby:
 		match_timer += delta
 		_update_happy_hour_clock()
+		_update_reboot_zone_status()
 		_check_match_status()
 		
 	if is_instance_valid(spectator_camera) and (is_game_over or is_spectating_clean):
@@ -158,6 +169,16 @@ func _process(delta: float) -> void:
 	if is_instance_valid(minimap_radar):
 		minimap_radar.local_player = local_player if is_instance_valid(local_player) else null
 		minimap_radar.spectator_camera = spectator_camera if is_instance_valid(spectator_camera) else null
+
+func _update_reboot_zone_status() -> void:
+	if is_game_over or info_label == null: return
+	var reboot = get_tree().get_first_node_in_group("reboot_zone") as RebootZone
+	if reboot and is_instance_valid(reboot):
+		if reboot.cooldown_timer > 0.0:
+			var sec_left = int(ceil(reboot.cooldown_timer))
+			info_label.text = "🛡️ ZONA SEGURA: Reboot do RH inicia em " + str(sec_left) + "s! Colete armas nas caixas!"
+		else:
+			info_label.text = "⚠️ ATENÇÃO: O REBOOT DO RH ESTÁ ENCOLHENDO O ANDAR! FUJA DA NÉVOA!"
 
 func _setup_minimap() -> void:
 	var minimap_placeholder = $CanvasLayer.find_child("Minimap", true, false)
@@ -197,8 +218,6 @@ func _update_happy_hour_clock() -> void:
 	if progress >= 1.0:
 		clock_label.text = "🍺 18:00:00 - SEXTOU! HORA DO HAPPY HOUR!"
 		clock_label.modulate = Color(0.2, 0.9, 0.3, 1.0)
-		if not is_game_over:
-			_show_game_over_banner("🍺 18:00:00 - SEXTOU! HORA DO HAPPY HOUR!", true)
 	else:
 		clock_label.text = "🕒 17:" + min_str + ":" + sec_str + " (HAPPY HOUR ÀS 18:00)"
 		clock_label.modulate = Color(0.95, 0.85, 0.2, 1.0) if fmod(match_timer, 1.0) > 0.5 else Color(1.0, 1.0, 1.0, 1.0)
@@ -211,16 +230,10 @@ func _generate_procedural_partitions() -> void:
 
 func get_valid_loot_spawn(calling_box: Node2D) -> Vector2:
 	var candidate_slots: Array[Vector2] = [
-		Vector2(250, 180), Vector2(640, 160), Vector2(1030, 180),
-		Vector2(200, 360), Vector2(640, 360), Vector2(1080, 360),
-		Vector2(250, 560), Vector2(640, 560), Vector2(1030, 560),
-		Vector2(1500, 180), Vector2(1900, 160), Vector2(2300, 180),
-		Vector2(1450, 360), Vector2(1850, 360), Vector2(2350, 360),
-		Vector2(1500, 560), Vector2(1900, 560), Vector2(2300, 560),
-		Vector2(250, 900), Vector2(640, 880), Vector2(1030, 900),
-		Vector2(200, 1150), Vector2(640, 1150), Vector2(1080, 1150),
-		Vector2(1500, 900), Vector2(1900, 880), Vector2(2300, 900),
-		Vector2(1450, 1150), Vector2(1850, 1150), Vector2(2350, 1150)
+		Vector2(450, 240), Vector2(1000, 240), Vector2(1550, 240), Vector2(2100, 240),
+		Vector2(450, 500), Vector2(1000, 500), Vector2(1550, 500), Vector2(2100, 500),
+		Vector2(450, 750), Vector2(1000, 750), Vector2(1550, 750), Vector2(2100, 750),
+		Vector2(450, 1050), Vector2(1000, 1050), Vector2(1550, 1050), Vector2(2100, 1050)
 	]
 	candidate_slots.shuffle()
 	
@@ -229,12 +242,12 @@ func get_valid_loot_spawn(calling_box: Node2D) -> Vector2:
 		var slot_valid = true
 		for box in other_boxes:
 			if box != calling_box and is_instance_valid(box) and box.visible:
-				if box.global_position.distance_to(slot) < 180.0:
+				if box.global_position.distance_to(slot) < 160.0:
 					slot_valid = false
 					break
 		if slot_valid: return slot
 			
-	return Vector2(randf_range(200.0, 2300.0), randf_range(160.0, 1200.0))
+	return Vector2(randf_range(300.0, 2200.0), randf_range(200.0, 1150.0))
 
 func _setup_match() -> void:
 	is_game_over = false
@@ -246,8 +259,20 @@ func _setup_match() -> void:
 	for p in get_tree().get_nodes_in_group("players"):
 		p.queue_free()
 		
+	# 1. Determinar o índice de Spawn do Jogador Local
+	var local_spawn_pos = SPAWN_CORNERS[0]
+	var net_players = NetworkManager.last_room_state.get("players", []) as Array
+	
+	if NetworkManager.is_connected_to_ws and net_players.size() > 0:
+		var local_idx = 0
+		for i in range(net_players.size()):
+			if net_players[i] is Dictionary and net_players[i].get("id", "") == NetworkManager.local_player_id:
+				local_idx = i
+				break
+		local_spawn_pos = SPAWN_CORNERS[local_idx % SPAWN_CORNERS.size()]
+	
 	local_player = chair_scene.instantiate() as ChairPlayer
-	local_player.global_position = player_spawn.global_position
+	local_player.global_position = local_spawn_pos
 	local_player.add_to_group("players")
 	add_child(local_player)
 	
@@ -268,14 +293,10 @@ func _setup_match() -> void:
 		if ResourceLoader.exists(avatar_path):
 			avatar_rect.texture = load(avatar_path) as Texture2D
 	
-	# Instanciar Players Remotos da Sala de Partida Online
+	# 2. Instanciar Players Remotos nas suas respectivas extremidades determinísticas
 	if NetworkManager.is_connected_to_ws:
-		var net_players = NetworkManager.last_room_state.get("players", []) as Array
-		var spawn_index = 0
-		var spawns_list = bot_spawns_container.get_children()
-		
-		for p in net_players:
-			var p_dict = p as Dictionary
+		for i in range(net_players.size()):
+			var p_dict = net_players[i] as Dictionary
 			var p_id = p_dict.get("id", "") as String
 			if p_id != NetworkManager.local_player_id and not p_id.is_empty():
 				var remote_inst = remote_player_scene.instantiate() as RemotePlayer
@@ -283,38 +304,30 @@ func _setup_match() -> void:
 				remote_inst.nickname = p_dict.get("nickname", "RemoteDev")
 				remote_inst.skin_key = p_dict.get("skin", "DEV")
 				
-				if spawn_index < spawns_list.size():
-					remote_inst.global_position = spawns_list[spawn_index].global_position
-					spawn_index += 1
-				else:
-					remote_inst.global_position = Vector2(randf_range(300, 2000), randf_range(200, 1200))
+				var remote_spawn_pos = SPAWN_CORNERS[i % SPAWN_CORNERS.size()]
+				remote_inst.global_position = remote_spawn_pos
 					
 				remote_inst.add_to_group("players")
 				add_child(remote_inst)
 				remote_players[p_id] = remote_inst
 				remote_inst.chair_destroyed.connect(_on_remote_chair_destroyed.bind(p_id))
 				
-	# Se estiver jogando sozinho (sem outros players conectados), spawnar bots de treino!
+	# 3. Se estiver jogando sozinho, spawnar bots de treino nas outras pontas!
 	if remote_players.is_empty():
 		var bot_names = ["Dev_Bugger", "QA_Hunter", "Bug_Slayer"]
-		var bot_idx = 0
-		for spawn in bot_spawns_container.get_children():
-			if spawn is Marker2D:
-				var bot_inst = bot_scene.instantiate() as BotPlayer
-				bot_inst.global_position = spawn.global_position
-				bot_inst.add_to_group("players")
-				add_child(bot_inst)
-				active_bots.append(bot_inst)
-				bot_inst.chair_destroyed.connect(_on_bot_destroyed)
-				
-				var b_name = bot_names[bot_idx % bot_names.size()]
-				bot_idx += 1
-				bot_inst.set_meta("nickname", b_name)
-			
-	info_label.text = "WASD = Mover | SHIFT = Drift | ESPAÇO = Boost | CLIQUE DIREITO / E = Item"
+		for i in range(bot_names.size()):
+			var bot_inst = bot_scene.instantiate() as BotPlayer
+			bot_inst.global_position = SPAWN_CORNERS[(i + 1) % SPAWN_CORNERS.size()]
+			bot_inst.add_to_group("players")
+			add_child(bot_inst)
+			active_bots.append(bot_inst)
+			bot_inst.chair_destroyed.connect(_on_bot_destroyed)
+			bot_inst.set_meta("nickname", bot_names[i])
 
 func _on_remote_chair_destroyed(_chair: RemotePlayer, p_id: String) -> void:
-	remote_players.erase(p_id)
+	if remote_players.has(p_id):
+		remote_players.erase(p_id)
+	_check_match_status()
 
 func _on_remote_player_transformed(p_id: String, pos: Vector2, rot: float, gun_rot: float) -> void:
 	if remote_players.has(p_id):
@@ -342,34 +355,37 @@ func _on_remote_player_eliminated(p_id: String) -> void:
 		var remote_inst = remote_players[p_id] as RemotePlayer
 		if is_instance_valid(remote_inst):
 			remote_inst.reveal_real_skin()
+			remote_inst.remove_from_group("players")
+			remote_inst.modulate = Color(0.5, 0.5, 0.5, 0.35)
+		remote_players.erase(p_id)
+		print("[Match] Player remoto eliminado: ", p_id, ". Sobreviventes remotos: ", remote_players.size())
+	_check_match_status()
 
 func _check_match_status() -> void:
-	if match_timer < 2.0 or is_returning_to_lobby:
+	if match_timer < 1.0 or is_returning_to_lobby or is_game_over:
 		return
 		
 	var local_alive = is_instance_valid(local_player) and local_player.post_it_hp > 0
 	var total_survivors = (1 if local_alive else 0) + active_bots.size() + remote_players.size()
 	
 	if total_survivors <= 1 or match_timer >= match_duration:
-		var winner_name = "O BOT INIMIGO"
+		is_game_over = true
+		var winner_name = "Nenhum"
+		
 		if local_alive:
 			winner_name = GameManager.player_nickname
-			_show_game_over_banner("🎉 SEXTOU! VOCÊ SOBREVIVEU AO DEPLOY EM PROD!", true)
+			_show_game_over_banner("🏆 SEXTOU! VITÓRIA ROYALE!\nVOCÊ SOBREVIVEU AO DEPLOY EM PRODUÇÃO!", true)
 		else:
-			if active_bots.size() > 0 and is_instance_valid(active_bots[0]):
-				winner_name = active_bots[0].get_meta("nickname", "Dev_Bot") as String
-			elif remote_players.size() > 0:
+			if remote_players.size() > 0:
 				var first_remote = remote_players.values()[0] as RemotePlayer
 				if is_instance_valid(first_remote):
 					winner_name = first_remote.nickname
-					
-			if not is_spectating_clean:
-				marquee_label.text = "💀 FIM DA PARTIDA!\nVENCEDOR: " + winner_name
-				marquee_banner.visible = true
-				dark_overlay.visible = true
+			elif active_bots.size() > 0 and is_instance_valid(active_bots[0]):
+				winner_name = active_bots[0].get_meta("nickname", "Dev_Bot") as String
 			else:
-				if info_label:
-					info_label.text = "🏆 FIM DA PARTIDA! VENCEDOR: " + winner_name
+				winner_name = "O RH (Reboot Geral)"
+				
+			_show_game_over_banner("🏆 FIM DA PARTIDA!\n👑 VENCEDOR DO DEPLOY: " + winner_name, false)
 			
 		_start_5s_countdown_to_lobby()
 
@@ -395,16 +411,23 @@ func _on_player_item_changed(item_name: String) -> void:
 func _on_player_destroyed(_chair: ChairPlayer) -> void:
 	if NetworkManager.is_connected_to_ws:
 		NetworkManager.send_eliminated(NetworkManager.local_player_id)
-	_show_game_over_banner("💀 REINICIADO PELO RH!\n[ESPAÇO] Espectar | [ESC] Voltar ao Lobby", false)
+	
+	_show_game_over_banner("💀 REINICIADO PELO RH!\n[ESPAÇO] Modo Espectador | [ESC] Voltar ao Lobby", false)
+	_check_match_status()
 
 func _show_game_over_banner(message: String, is_victory: bool) -> void:
-	is_game_over = true
-	
 	if not is_victory:
 		flash_overlay.visible = true
 		flash_overlay.color = Color(0.9, 0.1, 0.1, 0.8)
 		var tween = create_tween()
 		tween.tween_property(flash_overlay, "color:a", 0.0, 0.25)
+		await tween.finished
+		flash_overlay.visible = false
+	else:
+		flash_overlay.visible = true
+		flash_overlay.color = Color(0.95, 0.85, 0.2, 0.5) # Flash dourado da vitória
+		var tween = create_tween()
+		tween.tween_property(flash_overlay, "color:a", 0.0, 0.35)
 		await tween.finished
 		flash_overlay.visible = false
 	
@@ -415,8 +438,11 @@ func _show_game_over_banner(message: String, is_victory: bool) -> void:
 	
 	marquee_banner.visible = true
 	marquee_label.text = message
+	marquee_label.modulate = Color(1.0, 0.9, 0.2, 1.0) if is_victory else Color(1.0, 1.0, 1.0, 1.0)
 	
-	_activate_spectator_mode()
+	# Só ativa o modo espectador se o jogador local estiver eliminado
+	if not (is_instance_valid(local_player) and local_player.post_it_hp > 0):
+		_activate_spectator_mode()
 
 func _activate_spectator_mode() -> void:
 	if spectator_camera == null:
@@ -471,3 +497,4 @@ func _show_floating_nameplate(target: Node2D, nickname: String) -> void:
 func _on_bot_destroyed(bot: BotPlayer) -> void:
 	if bot in active_bots:
 		active_bots.erase(bot)
+	_check_match_status()
