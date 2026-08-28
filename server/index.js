@@ -11,10 +11,22 @@ const PORT = process.env.PORT || 3000;
 
 // Endpoint de Handshake HTTP "Acorda TI" (Cold Start do Render)
 app.get('/health', (req, res) => {
+    cleanupGhostPlayers();
     res.status(200).json({
         status: 'online',
         message: 'Servidor do TI está acordado e pronto para o deploy!',
+        activePlayers: roomState.players.length,
         timestamp: new Date().toISOString()
+    });
+});
+
+// Endpoint administrativo para resetar ou forçar purga de jogadores fantasmas
+app.get('/reset', (req, res) => {
+    cleanupGhostPlayers();
+    res.status(200).json({
+        status: 'reset_ok',
+        activePlayers: roomState.players.length,
+        roomState
     });
 });
 
@@ -32,6 +44,34 @@ let roomState = {
 };
 
 let nextPlayerId = 1;
+
+function ensureActiveHost() {
+    if (roomState.players.length === 0) return;
+    const hasHost = roomState.players.some(p => p.isHost);
+    if (!hasHost) {
+        roomState.players[0].isHost = true;
+        console.log(`[WS] 👑 Novo Host eleito automaticamente: ${roomState.players[0].nickname} (${roomState.players[0].id})`);
+    }
+}
+
+function cleanupGhostPlayers() {
+    const activePlayerIds = new Set();
+    wss.clients.forEach((client) => {
+        if (client.readyState === WebSocket.OPEN && client.playerId) {
+            activePlayerIds.add(client.playerId);
+        }
+    });
+
+    const initialCount = roomState.players.length;
+    roomState.players = roomState.players.filter(p => activePlayerIds.has(p.id));
+
+    if (roomState.players.length !== initialCount) {
+        console.log(`[WS] Purga de conexões fantasmas: ${initialCount} -> ${roomState.players.length} players ativos.`);
+        ensureActiveHost();
+        if (roomState.controlMode === 'DUO') updateDuoPairings();
+        broadcastRoomState();
+    }
+}
 
 function broadcastRoomState() {
     const payload = JSON.stringify({
@@ -84,9 +124,44 @@ function updateDuoPairings() {
     roomState.duos = duos;
 }
 
+function heartbeat() {
+    this.isAlive = true;
+}
+
+// Heartbeat ativo a cada 3.5 segundos para expurgar sockets mortos/fantasmas (F5 rápido no browser)
+const pingInterval = setInterval(() => {
+    wss.clients.forEach((ws) => {
+        if (ws.isAlive === false) {
+            console.log(`[WS] 🔌 Socket inativo/zumbi detectado (${ws.playerId}). Encerrando...`);
+            return ws.terminate();
+        }
+        ws.isAlive = false;
+        try {
+            ws.ping();
+        } catch (e) {
+            ws.terminate();
+        }
+    });
+
+    cleanupGhostPlayers();
+}, 3500);
+
+wss.on('close', () => {
+    clearInterval(pingInterval);
+});
+
 wss.on('connection', (ws) => {
+    ws.isAlive = true;
+    ws.on('pong', heartbeat);
+    ws.on('error', (err) => {
+        console.error(`[WS] Erro no socket (${ws.playerId}):`, err.message);
+        ws.terminate();
+    });
+
+    // Limpa quaisquer players fantasmas antes de registrar o novo
+    cleanupGhostPlayers();
+
     const playerId = `player_${nextPlayerId++}`;
-    // Se a sala estiver vazia ou não tiver nenhum host ativo, este jogador é o Host
     const hasActiveHost = roomState.players.some(p => p.isHost);
     const isFirst = !hasActiveHost || roomState.players.length === 0;
 
@@ -148,6 +223,8 @@ wss.on('connection', (ws) => {
                         if (data.skin) returningPlayer.skin = data.skin;
                         console.log(`[WS] ${returningPlayer.nickname} retornou ao Lobby.`);
                     }
+                    cleanupGhostPlayers();
+                    ensureActiveHost();
                     if (roomState.controlMode === 'DUO') updateDuoPairings();
                     broadcastRoomState();
                     break;
@@ -155,6 +232,7 @@ wss.on('connection', (ws) => {
                 case 'start_match':
                     const hostPlayer = roomState.players.find(x => x.id === ws.playerId);
                     if (hostPlayer && hostPlayer.isHost) {
+                        cleanupGhostPlayers();
                         roomState.isMatchStarted = true;
                         const matchPayload = JSON.stringify({ type: 'match_started', data: roomState });
                         wss.clients.forEach(c => {
@@ -245,11 +323,7 @@ wss.on('connection', (ws) => {
             console.log(`[WS] ${removed.nickname} (${removed.id}) desconectou.`);
             
             // Se o Host saiu e ainda há players, passar privilégio de Host para o primeiro da lista
-            const hasHost = roomState.players.some(p => p.isHost);
-            if (!hasHost && roomState.players.length > 0) {
-                roomState.players[0].isHost = true;
-                console.log(`[WS] 👑 Novo Host eleito: ${roomState.players[0].nickname} (${roomState.players[0].id})`);
-            }
+            ensureActiveHost();
             
             if (roomState.controlMode === 'DUO') updateDuoPairings();
             broadcastRoomState();
