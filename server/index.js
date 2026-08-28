@@ -139,6 +139,19 @@ wss.on('connection', (ws) => {
                     }
                     break;
 
+                case 'return_to_lobby':
+                    // Reseta o estado da sala para lobby e re-sincroniza todos os clientes
+                    roomState.isMatchStarted = false;
+                    const returningPlayer = roomState.players.find(x => x.id === ws.playerId);
+                    if (returningPlayer) {
+                        if (data.nickname) returningPlayer.nickname = data.nickname;
+                        if (data.skin) returningPlayer.skin = data.skin;
+                        console.log(`[WS] ${returningPlayer.nickname} retornou ao Lobby.`);
+                    }
+                    if (roomState.controlMode === 'DUO') updateDuoPairings();
+                    broadcastRoomState();
+                    break;
+
                 case 'start_match':
                     const hostPlayer = roomState.players.find(x => x.id === ws.playerId);
                     if (hostPlayer && hostPlayer.isHost) {

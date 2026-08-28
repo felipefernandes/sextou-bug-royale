@@ -172,6 +172,15 @@ func update_room_settings(game_mode: String, control_mode: String, duration: int
 	})
 	ws_peer.send_text(msg)
 
+func notify_return_to_lobby(nickname: String, skin: String) -> void:
+	if not is_connected_to_ws: return
+	var msg = JSON.stringify({
+		"type": "return_to_lobby",
+		"nickname": nickname,
+		"skin": skin
+	})
+	ws_peer.send_text(msg)
+
 func start_match() -> void:
 	if not is_connected_to_ws: return
 	var msg = JSON.stringify({"type": "start_match"})

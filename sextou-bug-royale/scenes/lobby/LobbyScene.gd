@@ -19,12 +19,36 @@ var _is_updating_ui: bool = false
 
 func _ready() -> void:
 	_setup_ui_options()
+	_restore_saved_profile()
 	_connect_signals()
 	_update_host_ui_state(NetworkManager.is_host)
 	
-	# Fazer Handshake e Conectar à Rede ao entrar no Lobby
+	# Fazer Handshake e Conectar à Rede se não estiver conectado
 	if not NetworkManager.is_connected_to_ws:
 		NetworkManager.perform_cold_start_handshake()
+	else:
+		# Retorno pós-partida com conexão já aberta:
+		# 1. Se já temos cache do estado da sala, renderizar imediatamente na tela
+		if not NetworkManager.last_room_state.is_empty():
+			_on_room_state_updated(NetworkManager.last_room_state)
+		
+		# 2. Notificar o servidor que retornamos ao Lobby com nosso nick/skin para re-sincronizar a sala
+		var current_nick = GameManager.player_nickname
+		if current_nick.is_empty() or current_nick == "Estagiário":
+			current_nick = "Player_" + NetworkManager.local_player_id
+			GameManager.player_nickname = current_nick
+			nickname_input.text = current_nick
+			
+		NetworkManager.notify_return_to_lobby(current_nick, GameManager.selected_skin)
+
+func _restore_saved_profile() -> void:
+	if not GameManager.player_nickname.is_empty() and GameManager.player_nickname != "Estagiário":
+		nickname_input.text = GameManager.player_nickname
+	
+	var skins = GameManager.skins_info.keys()
+	var skin_idx = skins.find(GameManager.selected_skin)
+	if skin_idx != -1:
+		skin_option.select(skin_idx)
 
 func _setup_ui_options() -> void:
 	skin_option.clear()
@@ -79,7 +103,9 @@ func _on_cold_start_progress(message: String) -> void:
 		players_list_label.text = "[color=#F39C12][b]⏳ STATUS DA FIRMA:[/b][/color]\n\n" + message
 
 func _on_connection_established(p_id: String, is_host: bool) -> void:
-	nickname_input.text = "Player_" + p_id
+	if GameManager.player_nickname.is_empty() or GameManager.player_nickname == "Estagiário":
+		GameManager.player_nickname = "Player_" + p_id
+	nickname_input.text = GameManager.player_nickname
 	_on_profile_changed(nickname_input.text)
 	_update_host_ui_state(is_host)
 
@@ -104,6 +130,7 @@ func _on_profile_changed(_text: String) -> void:
 	GameManager.player_nickname = nick
 	var skins = GameManager.skins_info.keys()
 	var selected_skin = skins[skin_option.selected]
+	GameManager.selected_skin = selected_skin
 	NetworkManager.update_profile(nick, selected_skin)
 
 func _on_host_settings_changed(_idx: int) -> void:
