@@ -18,13 +18,15 @@ func setup(start_pos: Vector2, shoot_dir: Vector2, bomb_shooter: Node2D = null) 
 	direction = shoot_dir.normalized()
 	shooter = bomb_shooter
 	rotation = direction.angle()
+	if shooter != null and shooter is CollisionObject2D:
+		add_collision_exception_with(shooter)
 
 func _physics_process(delta: float) -> void:
 	if not is_exploding:
 		position += direction * speed * delta
 
 func _on_body_entered(body: Node2D) -> void:
-	if body == shooter or is_exploding:
+	if body == null or body == shooter or (shooter != null and (body == shooter or body.is_ancestor_of(shooter) or shooter.is_ancestor_of(body))) or is_exploding:
 		return
 	explode()
 
@@ -35,12 +37,13 @@ func explode() -> void:
 	
 	var players = get_tree().get_nodes_in_group("players")
 	for p in players:
-		if is_instance_valid(p) and p is ChairPlayer:
+		if is_instance_valid(p) and p != shooter:
 			var dist = global_position.distance_to(p.global_position)
 			if dist <= explosion_radius:
-				if p != shooter:
+				if p.has_method("take_damage"):
 					p.take_damage(1)
-				var push_dir = (p.global_position - global_position).normalized()
-				p.velocity += push_dir * knockback_force
+				if "velocity" in p:
+					var push_dir = (p.global_position - global_position).normalized()
+					p.velocity += push_dir * knockback_force
 				
 	queue_free()

@@ -190,8 +190,8 @@ func shoot() -> void:
 	
 	if equipped_item == "ELASTIC_GUN" and elastic_bullet_scene != null:
 		var bullet_inst = elastic_bullet_scene.instantiate()
-		get_parent().add_child(bullet_inst)
 		bullet_inst.setup(muzzle.global_position, shoot_dir, self)
+		get_parent().add_child(bullet_inst)
 		
 		elastic_ammo -= 1
 		if elastic_ammo <= 0:
@@ -201,19 +201,19 @@ func shoot() -> void:
 			item_changed.emit("🟢 Elásticos (" + str(elastic_ammo) + ")")
 	elif equipped_item == "DISKETTE_BOMB" and diskette_bomb_scene != null:
 		var bomb_inst = diskette_bomb_scene.instantiate()
-		get_parent().add_child(bomb_inst)
 		bomb_inst.setup(muzzle.global_position, shoot_dir, self)
+		get_parent().add_child(bomb_inst)
 		equipped_item = "NONE"
 		item_changed.emit("NENHUM")
 	elif equipped_item == "COFFEE_SNIPER" and coffee_puddle_scene != null:
 		var bullet_inst = default_bullet_scene.instantiate() as Bullet
-		get_parent().add_child(bullet_inst)
 		bullet_inst.setup(muzzle.global_position, shoot_dir, self)
+		get_parent().add_child(bullet_inst)
 		
 		var puddle = coffee_puddle_scene.instantiate()
-		get_parent().add_child(puddle)
-		puddle.global_position = muzzle.global_position + shoot_dir * 250.0
 		puddle.setup(self)
+		puddle.global_position = muzzle.global_position + shoot_dir * 250.0
+		get_parent().add_child(puddle)
 		
 		coffee_ammo -= 1
 		if coffee_ammo <= 0:
@@ -223,8 +223,8 @@ func shoot() -> void:
 			item_changed.emit("☕ Sniper de Café (" + str(coffee_ammo) + ")")
 	else:
 		var bullet_inst = default_bullet_scene.instantiate() as Bullet
-		get_parent().add_child(bullet_inst)
 		bullet_inst.setup(muzzle.global_position, shoot_dir, self)
+		get_parent().add_child(bullet_inst)
 
 func equip_item(item_type: String) -> void:
 	equipped_item = item_type

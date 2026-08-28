@@ -21,9 +21,11 @@ func setup(start_pos: Vector2, shoot_direction: Vector2, bullet_shooter: Node2D 
 	direction = shoot_direction.normalized()
 	rotation = direction.angle()
 	shooter = bullet_shooter
+	if shooter != null and shooter is CollisionObject2D:
+		add_collision_exception_with(shooter)
 
 func _on_body_entered(body: Node2D) -> void:
-	if body == shooter:
+	if body == null or body == shooter or (shooter != null and (body == shooter or body.is_ancestor_of(shooter) or shooter.is_ancestor_of(body))):
 		return # Não causa dano ao próprio atirador
 	
 	if body.has_method("take_damage"):
