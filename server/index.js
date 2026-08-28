@@ -86,7 +86,9 @@ function updateDuoPairings() {
 
 wss.on('connection', (ws) => {
     const playerId = `player_${nextPlayerId++}`;
-    const isFirst = roomState.players.length === 0;
+    // Se a sala estiver vazia ou não tiver nenhum host ativo, este jogador é o Host
+    const hasActiveHost = roomState.players.some(p => p.isHost);
+    const isFirst = !hasActiveHost || roomState.players.length === 0;
 
     const newPlayer = {
         id: playerId,
@@ -104,10 +106,10 @@ wss.on('connection', (ws) => {
         updateDuoPairings();
     }
 
-    console.log(`[WS] ${newPlayer.nickname} conectou. Total: ${roomState.players.length} players. Host: ${isFirst}`);
+    console.log(`[WS] ${newPlayer.nickname} (${playerId}) conectou. Total: ${roomState.players.length} players. Host: ${newPlayer.isHost}`);
     
-    // Confirmar conexão com o ID atribuído
-    ws.send(JSON.stringify({ type: 'connected', playerId: playerId, isHost: isFirst }));
+    // Confirmar conexão com o ID atribuído e status de Host
+    ws.send(JSON.stringify({ type: 'connected', playerId: playerId, isHost: newPlayer.isHost }));
     broadcastRoomState();
 
     ws.on('message', (message) => {
@@ -227,11 +229,13 @@ wss.on('connection', (ws) => {
         const index = roomState.players.findIndex(x => x.id === ws.playerId);
         if (index !== -1) {
             const removed = roomState.players.splice(index, 1)[0];
-            console.log(`[WS] ${removed.nickname} desconectou.`);
+            console.log(`[WS] ${removed.nickname} (${removed.id}) desconectou.`);
             
-            // Se o Host saiu, passar privilégio de Host para o próximo player
-            if (removed.isHost && roomState.players.length > 0) {
+            // Se o Host saiu e ainda há players, passar privilégio de Host para o primeiro da lista
+            const hasHost = roomState.players.some(p => p.isHost);
+            if (!hasHost && roomState.players.length > 0) {
                 roomState.players[0].isHost = true;
+                console.log(`[WS] 👑 Novo Host eleito: ${roomState.players[0].nickname} (${roomState.players[0].id})`);
             }
             
             if (roomState.controlMode === 'DUO') updateDuoPairings();

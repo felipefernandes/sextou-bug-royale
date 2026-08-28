@@ -12,12 +12,15 @@ extends Control
 @onready var start_button: Button = $MarginContainer/VBoxContainer/StartButton
 
 # Visão do Jogador (Non-Host)
-@onready var non_host_info_label: Label = $MarginContainer/VBoxContainer/MainHBox/NonHostInfoLabel
+@onready var non_host_info_label: RichTextLabel = $MarginContainer/VBoxContainer/MainHBox/NonHostInfoLabel
 @onready var duos_panel_label: RichTextLabel = $MarginContainer/VBoxContainer/MainHBox/DuosVBox/DuosListLabel
+
+var _is_updating_ui: bool = false
 
 func _ready() -> void:
 	_setup_ui_options()
 	_connect_signals()
+	_update_host_ui_state(NetworkManager.is_host)
 	
 	# Fazer Handshake e Conectar à Rede ao entrar no Lobby
 	if not NetworkManager.is_connected_to_ws:
@@ -78,9 +81,21 @@ func _on_cold_start_progress(message: String) -> void:
 func _on_connection_established(p_id: String, is_host: bool) -> void:
 	nickname_input.text = "Player_" + p_id
 	_on_profile_changed(nickname_input.text)
+	_update_host_ui_state(is_host)
+
+func _update_host_ui_state(is_host: bool) -> void:
 	host_panel.visible = is_host
 	non_host_info_label.visible = not is_host
-	start_button.visible = is_host
+	start_button.visible = true
+	
+	if is_host:
+		start_button.disabled = false
+		start_button.text = "🚀 INICIAR PARTIDA EM PRODUÇÃO (HOST)"
+		start_button.modulate = Color(1, 1, 1, 1)
+	else:
+		start_button.disabled = true
+		start_button.text = "⏳ AGUARDANDO O HOST INICIAR A PARTIDA..."
+		start_button.modulate = Color(0.8, 0.8, 0.8, 0.8)
 
 func _on_profile_changed(_text: String) -> void:
 	var nick = nickname_input.text.strip_edges()
@@ -92,7 +107,7 @@ func _on_profile_changed(_text: String) -> void:
 	NetworkManager.update_profile(nick, selected_skin)
 
 func _on_host_settings_changed(_idx: int) -> void:
-	if not NetworkManager.is_host:
+	if _is_updating_ui or not NetworkManager.is_host:
 		return
 	var g_mode = "BR" if game_mode_option.selected == 0 else "TDM"
 	var c_mode = "SOLO" if control_mode_option.selected == 0 else "DUO"
@@ -101,15 +116,21 @@ func _on_host_settings_changed(_idx: int) -> void:
 
 func _on_room_state_updated(state: Dictionary) -> void:
 	var is_host = NetworkManager.is_host
-	host_panel.visible = is_host
-	non_host_info_label.visible = not is_host
-	start_button.visible = is_host
+	_update_host_ui_state(is_host)
 	
 	var players = state.get("players", []) as Array
 	var g_mode = state.get("gameMode", "BR") as String
 	var c_mode = state.get("controlMode", "SOLO") as String
 	var dur = state.get("durationMinutes", 5) as int
 	var duos = state.get("duos", []) as Array
+	
+	# Encontrar o nome do Host atual
+	var host_name = "Nenhum"
+	for p in players:
+		var p_dict = p as Dictionary
+		if p_dict.get("isHost", false):
+			host_name = p_dict.get("nickname", "Host")
+			break
 	
 	# Atualizar Lista de Players
 	var list_text = "[color=#F1C40F][b]👥 PLAYERS CONECTADOS (" + str(players.size()) + "):[/b][/color]\n\n"
@@ -122,9 +143,24 @@ func _on_room_state_updated(state: Dictionary) -> void:
 		
 	players_list_label.text = list_text
 	
-	# Atualizar Visão Não-Host
-	if not is_host:
-		non_host_info_label.text = "👑 Configurações do Host:\n• Modo: " + g_mode + "\n• Controle: " + c_mode + "\n• Tempo: " + str(dur) + " min"
+	# Se for Host, sincronizar os seletores da tela com o estado recebido
+	if is_host:
+		_is_updating_ui = true
+		game_mode_option.select(0 if g_mode == "BR" else 1)
+		control_mode_option.select(0 if c_mode == "SOLO" else 1)
+		duration_option.select(0 if dur == 3 else (1 if dur == 5 else 2))
+		_is_updating_ui = false
+	else:
+		# Visão formatada rica para jogadores Não-Host
+		var mode_name = "Battle Royale (BR)" if g_mode == "BR" else "Team Deathmatch (TDM)"
+		var ctrl_name = "Solo Intern (1x1)" if c_mode == "SOLO" else "Duplas Pareadas (Piloto + Artilheiro)"
+		var non_host_text = "[color=#E74C3C][b]👑 LÍDER DO DEPLOY:[/b][/color] [b]" + host_name + "[/b]\n\n"
+		non_host_text += "[color=#3498DB][b]⚙️ SETUP DA PARTIDA:[/b][/color]\n"
+		non_host_text += "• [b]Modo:[/b] " + mode_name + "\n"
+		non_host_text += "• [b]Controle:[/b] " + ctrl_name + "\n"
+		non_host_text += "• [b]Duração:[/b] " + str(dur) + " min\n\n"
+		non_host_text += "[color=#2ECC71][i]⏳ Aguardando o líder iniciar o deploy...[/i][/color]"
+		non_host_info_label.text = non_host_text
 		
 	# Atualizar Painel de Duplas Pareadas
 	var duos_text = "[color=#3498DB][b]🤝 PAREAMENTO DE DUPLAS (" + c_mode + "):[/b][/color]\n\n"
@@ -138,9 +174,14 @@ func _on_room_state_updated(state: Dictionary) -> void:
 	duos_panel_label.text = duos_text
 
 func _on_start_pressed() -> void:
+	if not NetworkManager.is_host:
+		return
 	_on_profile_changed(nickname_input.text)
-	if NetworkManager.is_host:
-		NetworkManager.start_match()
+	start_button.disabled = true
+	start_button.text = "🚀 ENVIANDO DEPLOY PARA A FIRMA..."
+	NetworkManager.start_match()
 
-func _on_match_started(_data: Dictionary) -> void:
+func _on_match_started(data: Dictionary) -> void:
+	var c_mode = data.get("controlMode", "SOLO") as String
+	GameManager.current_control_mode = GameManager.ControlMode.SOLO_INTERN if c_mode == "SOLO" else GameManager.ControlMode.DUO_LOCAL
 	get_tree().change_scene_to_file(GameManager.get_random_map_scene())

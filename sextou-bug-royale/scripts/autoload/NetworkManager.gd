@@ -116,6 +116,14 @@ func _parse_network_message(json_text: String) -> void:
 			connection_established.emit(local_player_id, is_host)
 		"room_state":
 			last_room_state = data.get("data", {})
+			var players_list = last_room_state.get("players", []) as Array
+			for p in players_list:
+				if p is Dictionary and p.get("id", "") == local_player_id:
+					var new_host_status = p.get("isHost", false)
+					if is_host != new_host_status:
+						is_host = new_host_status
+						print("[NetworkManager] 👑 Status de Host sincronizado para: ", is_host)
+					break
 			room_state_updated.emit(last_room_state)
 		"match_started":
 			match_started.emit(data.get("data", {}))
