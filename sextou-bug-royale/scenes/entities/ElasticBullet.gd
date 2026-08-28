@@ -17,8 +17,6 @@ func setup(start_pos: Vector2, shoot_direction: Vector2, bullet_shooter: Node2D 
 	velocity = shoot_direction.normalized() * speed
 	shooter = bullet_shooter
 	rotation = velocity.angle()
-	if shooter != null and shooter is CollisionObject2D:
-		add_collision_exception_with(shooter)
 
 func _physics_process(delta: float) -> void:
 	var collision = move_and_collide(velocity * delta)

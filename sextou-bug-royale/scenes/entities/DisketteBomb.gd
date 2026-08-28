@@ -18,8 +18,6 @@ func setup(start_pos: Vector2, shoot_dir: Vector2, bomb_shooter: Node2D = null) 
 	direction = shoot_dir.normalized()
 	shooter = bomb_shooter
 	rotation = direction.angle()
-	if shooter != null and shooter is CollisionObject2D:
-		add_collision_exception_with(shooter)
 
 func _physics_process(delta: float) -> void:
 	if not is_exploding:

@@ -25,8 +25,6 @@ func _process(delta: float) -> void:
 
 func setup(puddle_shooter: Node2D) -> void:
 	shooter = puddle_shooter
-	if shooter != null and shooter is CollisionObject2D:
-		add_collision_exception_with(shooter)
 
 func _on_body_entered(body: Node2D) -> void:
 	if body != null and body.has_method("take_damage") and body not in chairs_inside:
