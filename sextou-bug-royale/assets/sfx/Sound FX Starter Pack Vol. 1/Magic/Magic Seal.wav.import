@@ -1,0 +1,24 @@
+[remap]
+
+importer="wav"
+type="AudioStreamWAV"
+uid="uid://bk4cguibshc3g"
+path="res://.godot/imported/Magic Seal.wav-8745d1fb900fef20466a9ffcfe43c607.sample"
+
+[deps]
+
+source_file="res://assets/sfx/Sound FX Starter Pack Vol. 1/Magic/Magic Seal.wav"
+dest_files=["res://.godot/imported/Magic Seal.wav-8745d1fb900fef20466a9ffcfe43c607.sample"]
+
+[params]
+
+force/8_bit=false
+force/mono=false
+force/max_rate=false
+force/max_rate_hz=44100
+edit/trim=false
+edit/normalize=false
+edit/loop_mode=0
+edit/loop_begin=0
+edit/loop_end=-1
+compress/mode=2

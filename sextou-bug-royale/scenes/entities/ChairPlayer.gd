@@ -185,13 +185,15 @@ func shoot() -> void:
 	fire_cooldown_timer = fire_rate
 	var shoot_dir = Vector2.RIGHT.rotated(gun_anchor.global_rotation)
 	
+	GameManager.play_sfx("res://assets/sfx/Sound FX Starter Pack Vol. 1/Retro/Attack.wav", -12.0)
+	
 	if NetworkManager.is_connected_to_ws and not is_in_group("bots"):
 		NetworkManager.send_shoot(muzzle.global_position, shoot_dir, equipped_item)
 	
 	if equipped_item == "ELASTIC_GUN" and elastic_bullet_scene != null:
 		var bullet_inst = elastic_bullet_scene.instantiate()
-		get_parent().add_child(bullet_inst)
 		bullet_inst.setup(muzzle.global_position, shoot_dir, self)
+		get_parent().add_child(bullet_inst)
 		
 		elastic_ammo -= 1
 		if elastic_ammo <= 0:
@@ -201,19 +203,19 @@ func shoot() -> void:
 			item_changed.emit("🟢 Elásticos (" + str(elastic_ammo) + ")")
 	elif equipped_item == "DISKETTE_BOMB" and diskette_bomb_scene != null:
 		var bomb_inst = diskette_bomb_scene.instantiate()
-		get_parent().add_child(bomb_inst)
 		bomb_inst.setup(muzzle.global_position, shoot_dir, self)
+		get_parent().add_child(bomb_inst)
 		equipped_item = "NONE"
 		item_changed.emit("NENHUM")
 	elif equipped_item == "COFFEE_SNIPER" and coffee_puddle_scene != null:
 		var bullet_inst = default_bullet_scene.instantiate() as Bullet
-		get_parent().add_child(bullet_inst)
 		bullet_inst.setup(muzzle.global_position, shoot_dir, self)
+		get_parent().add_child(bullet_inst)
 		
 		var puddle = coffee_puddle_scene.instantiate()
-		get_parent().add_child(puddle)
-		puddle.global_position = muzzle.global_position + shoot_dir * 250.0
 		puddle.setup(self)
+		puddle.global_position = muzzle.global_position + shoot_dir * 250.0
+		get_parent().add_child(puddle)
 		
 		coffee_ammo -= 1
 		if coffee_ammo <= 0:
@@ -223,8 +225,8 @@ func shoot() -> void:
 			item_changed.emit("☕ Sniper de Café (" + str(coffee_ammo) + ")")
 	else:
 		var bullet_inst = default_bullet_scene.instantiate() as Bullet
-		get_parent().add_child(bullet_inst)
 		bullet_inst.setup(muzzle.global_position, shoot_dir, self)
+		get_parent().add_child(bullet_inst)
 
 func equip_item(item_type: String) -> void:
 	equipped_item = item_type
@@ -269,6 +271,18 @@ func trigger_boost() -> void:
 	boost_timer = boost_duration
 	boost_cooldown_timer = boost_cooldown
 
+func sync_hp(new_hp: int) -> void:
+	if post_it_hp <= new_hp: return
+	post_it_hp = new_hp
+	hp_changed.emit(post_it_hp)
+	_update_post_its_visual()
+	_play_hit_feedback()
+	_spawn_damage_indicator()
+	GameManager.play_sfx("res://assets/sfx/Sound FX Starter Pack Vol. 1/Retro/Damage.wav")
+	
+	if post_it_hp <= 0:
+		die()
+
 func take_damage(amount: int) -> void:
 	if invulnerable_timer > 0:
 		return
@@ -283,9 +297,12 @@ func take_damage(amount: int) -> void:
 	_update_post_its_visual()
 	_play_hit_feedback()
 	_spawn_damage_indicator()
+	GameManager.play_sfx("res://assets/sfx/Sound FX Starter Pack Vol. 1/Retro/Damage.wav")
 	
 	if NetworkManager.is_connected_to_ws and not NetworkManager.local_player_id.is_empty():
-		NetworkManager.send_hit(NetworkManager.local_player_id, post_it_hp)
+		# Evitar que BotPlayers disparem hit para o NetworkManager do jogador local
+		if not is_in_group("bots"):
+			NetworkManager.send_hit(NetworkManager.local_player_id, post_it_hp)
 	
 	if post_it_hp <= 0:
 		die()

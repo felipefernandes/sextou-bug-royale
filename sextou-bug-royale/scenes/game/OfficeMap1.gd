@@ -1,24 +1,14 @@
 extends Node2D
 
+@onready var game_hud: GameHUD = $GameHUD
 @onready var partitions_container: Node2D = $Walls
-@onready var hp_label: Label = $CanvasLayer.find_child("HpLabel", true, false) as Label
-@onready var item_label: Label = $CanvasLayer.find_child("ItemLabel", true, false) as Label
-@onready var info_label: Label = $CanvasLayer.find_child("InfoLabel", true, false) as Label
-@onready var clock_label: Label = $CanvasLayer.find_child("ClockLabel", true, false) as Label
-
-@onready var dark_overlay: ColorRect = $CanvasLayer.find_child("DarkOverlay", true, false) as ColorRect
-@onready var flash_overlay: ColorRect = $CanvasLayer.find_child("FlashOverlay", true, false) as ColorRect
-@onready var marquee_banner: Panel = $CanvasLayer.find_child("MarqueeBanner", true, false) as Panel
-@onready var marquee_label: Label = $CanvasLayer.find_child("MarqueeLabel", true, false) as Label
-@onready var marquee_countdown_banner: Panel = $CanvasLayer.find_child("MarqueeBannerCountdown", true, false) as Panel
-@onready var countdown_label: Label = $CanvasLayer.find_child("CountDownLabel", true, false) as Label
 
 var chair_scene: PackedScene = preload("res://scenes/entities/ChairPlayer.tscn")
 var bot_scene: PackedScene = preload("res://scenes/entities/BotPlayer.tscn")
 var remote_player_scene: PackedScene = preload("res://scenes/entities/RemotePlayer.tscn")
 var default_bullet_scene: PackedScene = preload("res://scenes/entities/Bullet.tscn")
 
-# 8 Pontos de Spawn nas Extremidades e Cantos do Mapa do Escritório
+# 8 Pontos de Spawn nas Extremidades e Cantos do Mapa do Escritório (2560x1440)
 const SPAWN_CORNERS: Array[Vector2] = [
 	Vector2(180, 140),   # 0: Noroeste (Canto Superior Esquerdo)
 	Vector2(2360, 140),  # 1: Nordeste (Canto Superior Direito)
@@ -34,6 +24,7 @@ var local_player: ChairPlayer = null
 var active_bots: Array[BotPlayer] = []
 var remote_players: Dictionary = {} # player_id -> RemotePlayer
 var is_game_over: bool = false
+var is_player_eliminated: bool = false
 var is_spectating_clean: bool = false
 var is_returning_to_lobby: bool = false
 
@@ -42,15 +33,8 @@ var match_timer: float = 0.0
 
 var spectator_camera: Camera2D = null
 var spectator_target_index: int = 0
-var minimap_radar: MinimapRadar = null
 
 func _ready() -> void:
-	dark_overlay.visible = false
-	flash_overlay.visible = false
-	marquee_banner.visible = false
-	if marquee_countdown_banner:
-		marquee_countdown_banner.visible = false
-	_apply_fonts()
 	_connect_network_signals()
 	_generate_procedural_partitions()
 	_setup_match()
@@ -65,31 +49,11 @@ func _connect_network_signals() -> void:
 	if not NetworkManager.remote_player_eliminated.is_connected(_on_remote_player_eliminated):
 		NetworkManager.remote_player_eliminated.connect(_on_remote_player_eliminated)
 
-func _apply_fonts() -> void:
-	var font_pixel = load("res://assets/fonts/PressStart2P-Regular.ttf") as Font
-	var font_audio = load("res://assets/fonts/Audiowide-Regular.ttf") as Font
-	
-	if font_pixel:
-		if clock_label:
-			clock_label.add_theme_font_override("font", font_pixel)
-			clock_label.add_theme_font_size_override("font_size", 12)
-		if marquee_label:
-			marquee_label.add_theme_font_override("font", font_pixel)
-			marquee_label.add_theme_font_size_override("font_size", 11)
-		if countdown_label:
-			countdown_label.add_theme_font_override("font", font_pixel)
-			countdown_label.add_theme_font_size_override("font_size", 11)
-			
-	if font_audio:
-		if info_label:
-			info_label.add_theme_font_override("font", font_audio)
-			info_label.add_theme_font_size_override("font_size", 12)
-
-func _unhandled_input(event: InputEvent) -> void:
-	if event is InputEventKey and event.pressed:
+func _input(event: InputEvent) -> void:
+	if event is InputEventKey and event.is_pressed() and not event.is_echo():
 		if event.keycode == KEY_R and not NetworkManager.is_connected_to_ws:
 			get_tree().reload_current_scene()
-		elif is_game_over:
+		elif is_player_eliminated or is_game_over:
 			if event.keycode == KEY_SPACE:
 				_enter_clean_spectator_mode()
 			elif event.keycode == KEY_ESCAPE:
@@ -99,12 +63,9 @@ func _unhandled_input(event: InputEvent) -> void:
 
 func _enter_clean_spectator_mode() -> void:
 	is_spectating_clean = true
-	marquee_banner.visible = false
-	if marquee_countdown_banner: marquee_countdown_banner.visible = false
-	dark_overlay.visible = false
-	flash_overlay.visible = false
-	if info_label:
-		info_label.text = "🎥 MODO ESPECTADOR: [WASD/Setas] Mover | [TAB] Trocar Alvo | [ESC] Lobby"
+	if game_hud:
+		game_hud.hide_game_over_banner()
+		game_hud.update_info("🎥 MODO ESPECTADOR: [WASD/Setas] Mover | [TAB] Trocar Alvo | [ESC] Lobby")
 
 func _cycle_spectator_target() -> void:
 	var active_targets: Array[Node2D] = []
@@ -125,20 +86,17 @@ func _cycle_spectator_target() -> void:
 				target_name = target.get_meta("nickname")
 			elif "nickname" in target:
 				target_name = target.nickname
-			if info_label:
-				info_label.text = "🎥 Focando em: " + str(target_name) + " | [WASD/Setas] Mover | [TAB] Trocar | [ESC] Lobby"
+			if game_hud:
+				game_hud.update_info("🎥 Focando em: " + str(target_name) + " | [WASD/Setas] Mover | [TAB] Trocar | [ESC] Lobby")
 
 func _start_5s_countdown_to_lobby() -> void:
 	if is_returning_to_lobby: return
 	is_returning_to_lobby = true
 	
-	if marquee_countdown_banner and countdown_label:
-		marquee_countdown_banner.visible = true
+	if game_hud:
 		for i in range(5, 0, -1):
-			countdown_label.text = "⏱️ RETORNANDO AO LOBBY EM " + str(i) + " SEGUNDO" + ("S" if i > 1 else "") + "..."
+			game_hud.show_countdown(i)
 			await get_tree().create_timer(1.0).timeout
-		countdown_label.text = "🚀 RETORNANDO AO LOBBY..."
-		await get_tree().create_timer(0.5).timeout
 	else:
 		await get_tree().create_timer(5.0).timeout
 		
@@ -150,11 +108,13 @@ func _return_to_lobby() -> void:
 func _process(delta: float) -> void:
 	if not is_returning_to_lobby:
 		match_timer += delta
-		_update_happy_hour_clock()
+		if game_hud:
+			game_hud.update_clock(match_timer, match_duration)
+			game_hud.set_radar_targets(local_player if is_instance_valid(local_player) else null, active_bots, remote_players, spectator_camera if is_instance_valid(spectator_camera) else null)
 		_update_reboot_zone_status()
 		_check_match_status()
 		
-	if is_instance_valid(spectator_camera) and (is_game_over or is_spectating_clean):
+	if is_instance_valid(spectator_camera) and (is_player_eliminated or is_game_over or is_spectating_clean):
 		var cam_dir := Vector2.ZERO
 		if Input.is_key_pressed(KEY_W) or Input.is_key_pressed(KEY_UP): cam_dir.y -= 1.0
 		if Input.is_key_pressed(KEY_S) or Input.is_key_pressed(KEY_DOWN): cam_dir.y += 1.0
@@ -165,62 +125,16 @@ func _process(delta: float) -> void:
 			spectator_camera.global_position += cam_dir.normalized() * 750.0 * delta
 			spectator_camera.global_position.x = clamp(spectator_camera.global_position.x, 640.0, 1920.0)
 			spectator_camera.global_position.y = clamp(spectator_camera.global_position.y, 360.0, 1080.0)
-			
-	if is_instance_valid(minimap_radar):
-		minimap_radar.local_player = local_player if is_instance_valid(local_player) else null
-		minimap_radar.spectator_camera = spectator_camera if is_instance_valid(spectator_camera) else null
 
 func _update_reboot_zone_status() -> void:
-	if is_game_over or info_label == null: return
+	if is_game_over or is_player_eliminated or game_hud == null: return
 	var reboot = get_tree().get_first_node_in_group("reboot_zone") as RebootZone
 	if reboot and is_instance_valid(reboot):
 		if reboot.cooldown_timer > 0.0:
 			var sec_left = int(ceil(reboot.cooldown_timer))
-			info_label.text = "🛡️ ZONA SEGURA: Reboot do RH inicia em " + str(sec_left) + "s! Colete armas nas caixas!"
+			game_hud.update_info("🛡️ ZONA SEGURA: Reboot do RH inicia em " + str(sec_left) + "s! Colete armas nas caixas!")
 		else:
-			info_label.text = "⚠️ ATENÇÃO: O REBOOT DO RH ESTÁ ENCOLHENDO O ANDAR! FUJA DA NÉVOA!"
-
-func _setup_minimap() -> void:
-	var minimap_placeholder = $CanvasLayer.find_child("Minimap", true, false)
-	if minimap_placeholder:
-		if minimap_radar == null:
-			minimap_radar = MinimapRadar.new()
-			minimap_radar.name = "MinimapRadarControl"
-		
-		if minimap_placeholder is Control:
-			minimap_radar.anchors_preset = Control.PRESET_FULL_RECT
-			minimap_radar.size = minimap_placeholder.size
-			minimap_radar.position = Vector2.ZERO
-			if minimap_radar.get_parent() != minimap_placeholder:
-				minimap_placeholder.add_child(minimap_radar)
-		else:
-			minimap_radar.position = Vector2(1040, 560)
-			minimap_radar.size = Vector2(220, 140)
-			if minimap_radar.get_parent() != $CanvasLayer:
-				$CanvasLayer.add_child(minimap_radar)
-			
-	if is_instance_valid(minimap_radar):
-		minimap_radar.local_player = local_player if is_instance_valid(local_player) else null
-		minimap_radar.active_bots = active_bots
-		minimap_radar.remote_players = remote_players
-		minimap_radar.spectator_camera = spectator_camera if is_instance_valid(spectator_camera) else null
-
-func _update_happy_hour_clock() -> void:
-	if clock_label == null: return
-	var progress = clamp(match_timer / match_duration, 0.0, 1.0)
-	var total_simulated_seconds = int(progress * 3600.0)
-	var minutes = int(float(total_simulated_seconds) / 60.0)
-	var seconds = total_simulated_seconds % 60
-	
-	var min_str = str(minutes).pad_zeros(2)
-	var sec_str = str(seconds).pad_zeros(2)
-	
-	if progress >= 1.0:
-		clock_label.text = "🍺 18:00:00 - SEXTOU! HORA DO HAPPY HOUR!"
-		clock_label.modulate = Color(0.2, 0.9, 0.3, 1.0)
-	else:
-		clock_label.text = "🕒 17:" + min_str + ":" + sec_str + " (HAPPY HOUR ÀS 18:00)"
-		clock_label.modulate = Color(0.95, 0.85, 0.2, 1.0) if fmod(match_timer, 1.0) > 0.5 else Color(1.0, 1.0, 1.0, 1.0)
+			game_hud.update_info("⚠️ ATENÇÃO: O REBOOT DO RH ESTÁ ENCOLHENDO O ANDAR! FUJA DA NÉVOA!")
 
 func _generate_procedural_partitions() -> void:
 	var deploy_boxes = $DeployBoxes.get_children()
@@ -251,6 +165,7 @@ func get_valid_loot_spawn(calling_box: Node2D) -> Vector2:
 
 func _setup_match() -> void:
 	is_game_over = false
+	is_player_eliminated = false
 	is_spectating_clean = false
 	is_returning_to_lobby = false
 	active_bots.clear()
@@ -258,6 +173,9 @@ func _setup_match() -> void:
 	
 	for p in get_tree().get_nodes_in_group("players"):
 		p.queue_free()
+		
+	if game_hud:
+		game_hud.setup_profile(GameManager.player_nickname, GameManager.selected_avatar)
 		
 	# 1. Determinar o índice de Spawn do Jogador Local
 	var local_spawn_pos = SPAWN_CORNERS[0]
@@ -281,17 +199,6 @@ func _setup_match() -> void:
 	local_player.chair_destroyed.connect(_on_player_destroyed)
 	_on_player_hp_changed(local_player.post_it_hp)
 	_on_player_item_changed("NENHUM")
-	_setup_minimap()
-	
-	var nick_label = $CanvasLayer.find_child("PlayerNickLabel", true, false) as Label
-	if nick_label:
-		nick_label.text = GameManager.player_nickname
-		
-	var avatar_rect = $CanvasLayer.find_child("PlayerAvatar", true, false) as TextureRect
-	if avatar_rect:
-		var avatar_path = "res://assets/avatars/" + GameManager.selected_avatar
-		if ResourceLoader.exists(avatar_path):
-			avatar_rect.texture = load(avatar_path) as Texture2D
 	
 	# 2. Instanciar Players Remotos nas suas respectivas extremidades determinísticas
 	if NetworkManager.is_connected_to_ws:
@@ -337,14 +244,16 @@ func _on_remote_player_transformed(p_id: String, pos: Vector2, rot: float, gun_r
 
 func _on_remote_player_shot(p_id: String, pos: Vector2, dir: Vector2, _item_type: String) -> void:
 	if p_id != NetworkManager.local_player_id:
-		var bullet_inst = default_bullet_scene.instantiate() as Bullet
-		get_parent().add_child(bullet_inst)
 		var shooter_node = remote_players.get(p_id, null)
+		var bullet_inst = default_bullet_scene.instantiate() as Bullet
 		bullet_inst.setup(pos, dir, shooter_node)
+		add_child(bullet_inst)
+		GameManager.play_sfx("res://assets/sfx/Sound FX Starter Pack Vol. 1/Retro/Attack.wav", -12.0)
 
 func _on_remote_player_hit(target_id: String, _attacker_id: String, remaining_hp: int) -> void:
 	if target_id == NetworkManager.local_player_id and is_instance_valid(local_player):
-		local_player.take_damage(1)
+		if local_player.has_method("sync_hp"):
+			local_player.sync_hp(remaining_hp)
 	elif remote_players.has(target_id):
 		var remote_inst = remote_players[target_id] as RemotePlayer
 		if is_instance_valid(remote_inst):
@@ -381,7 +290,9 @@ func _check_match_status() -> void:
 		
 		if local_alive:
 			winner_name = GameManager.player_nickname
-			_show_game_over_banner("🏆 SEXTOU! VITÓRIA ROYALE!\nVOCÊ SOBREVIVEU AO DEPLOY EM PRODUÇÃO!", true)
+			if game_hud:
+				game_hud.show_game_over_banner("🏆 SEXTOU! VITÓRIA ROYALE!\nVOCÊ SOBREVIVEU AO DEPLOY EM PRODUÇÃO!", true)
+				game_hud.flash_screen(Color(0.95, 0.85, 0.2, 0.5), 0.5)
 		else:
 			if remote_players.size() > 0:
 				var first_remote = remote_players.values()[0] as RemotePlayer
@@ -392,64 +303,30 @@ func _check_match_status() -> void:
 			else:
 				winner_name = "O RH (Reboot Geral)"
 				
-			_show_game_over_banner("🏆 FIM DA PARTIDA!\n👑 VENCEDOR DO DEPLOY: " + winner_name, false)
+			if game_hud:
+				game_hud.show_game_over_banner("🏆 FIM DA PARTIDA!\n👑 VENCEDOR DO DEPLOY: " + winner_name, false)
+				game_hud.flash_screen(Color(0.9, 0.1, 0.1, 0.5), 0.4)
 			
 		_start_5s_countdown_to_lobby()
 
 func _on_player_hp_changed(hp: int) -> void:
-	if hp_label and not is_game_over:
-		hp_label.text = "Post-its de Vida: " + str(hp) + " / 3"
+	if game_hud and not is_game_over:
+		game_hud.update_hp(hp)
 
 func _on_player_item_changed(item_name: String) -> void:
-	if item_label:
-		item_label.text = item_name
-		
-	var icon_label = $CanvasLayer.find_child("IconItemLabel", true, false) as Label
-	if icon_label:
-		var emoji = ""
-		if "Café" in item_name or "COFFEE" in item_name: emoji = "☕"
-		elif "Elástico" in item_name or "ELASTIC" in item_name: emoji = "🟢"
-		elif "Disquete" in item_name or "DISKETTE" in item_name: emoji = "💾"
-		elif "ESCUDO" in item_name or "CTRL_Z" in item_name: emoji = "🛡️"
-		elif "GAMBIARRA" in item_name or "POG" in item_name: emoji = "🚀"
-		elif "404" in item_name or "NOT_FOUND" in item_name: emoji = "👻"
-		icon_label.text = emoji
+	if game_hud:
+		game_hud.update_item(item_name)
 
 func _on_player_destroyed(_chair: ChairPlayer) -> void:
 	if NetworkManager.is_connected_to_ws:
 		NetworkManager.send_eliminated(NetworkManager.local_player_id)
 	
-	_show_game_over_banner("💀 REINICIADO PELO RH!\n[ESPAÇO] Modo Espectador | [ESC] Voltar ao Lobby", false)
+	is_player_eliminated = true
+	_activate_spectator_mode()
+	if game_hud:
+		game_hud.show_game_over_banner("💀 REINICIADO PELO RH!\n[ESPAÇO] Modo Espectador | [TAB] Trocar Alvo | [ESC] Voltar ao Lobby", false)
+		game_hud.flash_screen(Color(0.9, 0.1, 0.1, 0.8), 0.3)
 	_check_match_status()
-
-func _show_game_over_banner(message: String, is_victory: bool) -> void:
-	if not is_victory:
-		flash_overlay.visible = true
-		flash_overlay.color = Color(0.9, 0.1, 0.1, 0.8)
-		var tween = create_tween()
-		tween.tween_property(flash_overlay, "color:a", 0.0, 0.25)
-		await tween.finished
-		flash_overlay.visible = false
-	else:
-		flash_overlay.visible = true
-		flash_overlay.color = Color(0.95, 0.85, 0.2, 0.5) # Flash dourado da vitória
-		var tween = create_tween()
-		tween.tween_property(flash_overlay, "color:a", 0.0, 0.35)
-		await tween.finished
-		flash_overlay.visible = false
-	
-	dark_overlay.visible = true
-	dark_overlay.color = Color(0, 0, 0, 0)
-	var dark_tween = create_tween()
-	dark_tween.tween_property(dark_overlay, "color:a", 0.55, 0.4)
-	
-	marquee_banner.visible = true
-	marquee_label.text = message
-	marquee_label.modulate = Color(1.0, 0.9, 0.2, 1.0) if is_victory else Color(1.0, 1.0, 1.0, 1.0)
-	
-	# Só ativa o modo espectador se o jogador local estiver eliminado
-	if not (is_instance_valid(local_player) and local_player.post_it_hp > 0):
-		_activate_spectator_mode()
 
 func _activate_spectator_mode() -> void:
 	if spectator_camera == null:

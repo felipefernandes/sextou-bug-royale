@@ -1,0 +1,24 @@
+[remap]
+
+importer="wav"
+type="AudioStreamWAV"
+uid="uid://c4hkfrj0cna0j"
+path="res://.godot/imported/Heavy Gun Reload.wav-946b622597ba91f92b7dbf434f235324.sample"
+
+[deps]
+
+source_file="res://assets/sfx/Sound FX Starter Pack Vol. 1/Hollywood/Heavy Gun Reload.wav"
+dest_files=["res://.godot/imported/Heavy Gun Reload.wav-946b622597ba91f92b7dbf434f235324.sample"]
+
+[params]
+
+force/8_bit=false
+force/mono=false
+force/max_rate=false
+force/max_rate_hz=44100
+edit/trim=false
+edit/normalize=false
+edit/loop_mode=0
+edit/loop_begin=0
+edit/loop_end=-1
+compress/mode=2

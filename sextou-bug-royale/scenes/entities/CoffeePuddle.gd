@@ -5,7 +5,7 @@ extends Area2D
 @export var damage_interval: float = 1.5
 
 var shooter: Node2D = null
-var chairs_inside: Array[ChairPlayer] = []
+var chairs_inside: Array[Node2D] = []
 var damage_timer: float = 0.0
 
 func _ready() -> void:
@@ -19,15 +19,17 @@ func _process(delta: float) -> void:
 		if damage_timer >= damage_interval:
 			damage_timer = 0.0
 			for chair in chairs_inside:
-				if is_instance_valid(chair) and chair != shooter:
-					chair.take_damage(1)
+				if is_instance_valid(chair) and chair != shooter and (shooter == null or not chair.is_ancestor_of(shooter)):
+					if chair.has_method("take_damage") and not (shooter is RemotePlayer):
+						chair.take_damage(1)
 
 func setup(puddle_shooter: Node2D) -> void:
 	shooter = puddle_shooter
 
 func _on_body_entered(body: Node2D) -> void:
-	if body is ChairPlayer and body not in chairs_inside:
-		chairs_inside.append(body)
+	if body != null and body.has_method("take_damage") and body not in chairs_inside:
+		if body != shooter and (shooter == null or not body.is_ancestor_of(shooter)):
+			chairs_inside.append(body)
 
 func _on_body_exited(body: Node2D) -> void:
 	if body in chairs_inside:

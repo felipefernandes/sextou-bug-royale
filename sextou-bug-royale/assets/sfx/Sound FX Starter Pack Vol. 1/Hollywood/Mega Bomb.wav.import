@@ -1,0 +1,24 @@
+[remap]
+
+importer="wav"
+type="AudioStreamWAV"
+uid="uid://c4vpd1k3v4eal"
+path="res://.godot/imported/Mega Bomb.wav-2cc6a72d805d5b083d92013c78babc6d.sample"
+
+[deps]
+
+source_file="res://assets/sfx/Sound FX Starter Pack Vol. 1/Hollywood/Mega Bomb.wav"
+dest_files=["res://.godot/imported/Mega Bomb.wav-2cc6a72d805d5b083d92013c78babc6d.sample"]
+
+[params]
+
+force/8_bit=false
+force/mono=false
+force/max_rate=false
+force/max_rate_hz=44100
+edit/trim=false
+edit/normalize=false
+edit/loop_mode=0
+edit/loop_begin=0
+edit/loop_end=-1
+compress/mode=2

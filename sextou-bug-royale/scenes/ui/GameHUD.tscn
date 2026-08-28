@@ -1,0 +1,207 @@
+[gd_scene load_steps=8 format=3 uid="uid://game_hud_component_001"]
+
+[ext_resource type="Script" path="res://scenes/ui/GameHUD.gd" id="1_hud"]
+[ext_resource type="Texture2D" uid="uid://btp55t7j4cuyb" path="res://assets/tilemaps/Characters/player_char_001.png" id="2_avatar"]
+[ext_resource type="FontFile" uid="uid://1r57lvsahpcn" path="res://assets/fonts/VT323-Regular.ttf" id="3_vt323"]
+[ext_resource type="FontFile" uid="uid://4pkg587snejh" path="res://assets/fonts/PressStart2P-Regular.ttf" id="4_pressstart"]
+
+[sub_resource type="LabelSettings" id="LabelSettings_dfbw3"]
+font_size = 14
+outline_size = 1
+outline_color = Color(0.1, 0.1, 0.15, 1)
+
+[sub_resource type="LabelSettings" id="LabelSettings_aag2v"]
+font_size = 24
+
+[sub_resource type="LabelSettings" id="LabelSettings_qblps"]
+font_size = 18
+
+[node name="GameHUD" type="CanvasLayer"]
+script = ExtResource("1_hud")
+
+[node name="HUD" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+metadata/_edit_lock_ = true
+
+[node name="PlayerAvatar" type="Sprite2D" parent="HUD"]
+z_index = 1
+position = Vector2(88, 632)
+scale = Vector2(0.796875, 0.796875)
+texture = ExtResource("2_avatar")
+
+[node name="HpLabel" type="Label" parent="HUD"]
+offset_left = 230.0
+offset_top = 659.0
+offset_right = 460.0
+offset_bottom = 689.0
+mouse_filter = 2
+theme_override_fonts/font = ExtResource("3_vt323")
+theme_override_font_sizes/font_size = 20
+text = "Post-its de Vida: 3 / 3"
+
+[node name="ItemLabel" type="Label" parent="HUD"]
+custom_minimum_size = Vector2(238, 13)
+offset_left = 230.0
+offset_top = 632.0
+offset_right = 468.0
+offset_bottom = 645.0
+mouse_filter = 2
+theme_override_colors/font_color = Color(0.95, 0.85, 0.2, 1)
+theme_override_fonts/font = ExtResource("4_pressstart")
+theme_override_font_sizes/font_size = 13
+text = "NONE"
+vertical_alignment = 1
+
+[node name="IconItemLabel" type="Label" parent="HUD"]
+offset_left = 169.0
+offset_top = 633.0
+offset_right = 217.0
+offset_bottom = 678.0
+mouse_filter = 2
+text = "✨"
+label_settings = SubResource("LabelSettings_aag2v")
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="PlayerNickLabel" type="Label" parent="HUD"]
+offset_left = 35.0
+offset_top = 552.0
+offset_right = 142.0
+offset_bottom = 575.0
+mouse_filter = 2
+theme_override_fonts/font = ExtResource("3_vt323")
+text = "Estagiário"
+label_settings = SubResource("LabelSettings_dfbw3")
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="DarkOverlay" type="ColorRect" parent="HUD"]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+color = Color(0, 0, 0, 0.5)
+
+[node name="FlashOverlay" type="ColorRect" parent="HUD"]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+color = Color(1, 1, 1, 0.8)
+
+[node name="ClockLabel" type="Label" parent="HUD"]
+layout_mode = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -433.0
+offset_top = 7.0
+offset_right = -13.0
+offset_bottom = 37.0
+grow_horizontal = 0
+mouse_filter = 2
+theme_override_colors/font_color = Color(0.95, 0.85, 0.2, 1)
+theme_override_fonts/font = ExtResource("4_pressstart")
+theme_override_font_sizes/font_size = 12
+text = "🕒 17:00:00 (HAPPY HOUR ÀS 18:00)"
+horizontal_alignment = 2
+vertical_alignment = 1
+
+[node name="InfoLabel" type="Label" parent="HUD"]
+layout_mode = 1
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -1272.0
+offset_top = -713.0
+offset_right = -672.0
+offset_bottom = -693.0
+grow_horizontal = 0
+grow_vertical = 0
+mouse_filter = 2
+theme_override_colors/font_color = Color(0.7, 0.75, 0.8, 1)
+theme_override_fonts/font = ExtResource("3_vt323")
+theme_override_font_sizes/font_size = 12
+text = "WASD = Mover | SHIFT = Drift | ESPAÇO = Boost | CLIQUE DIREITO / E = Item | R = Reiniciar"
+
+[node name="MarqueeBanner" type="Panel" parent="HUD"]
+visible = false
+layout_mode = 0
+offset_left = -6.0
+offset_top = 287.0
+offset_right = 1280.0
+offset_bottom = 419.0
+mouse_filter = 2
+
+[node name="MarqueeLabel" type="Label" parent="HUD/MarqueeBanner"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 15.0
+offset_top = 10.0
+offset_right = -15.0
+offset_bottom = -10.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+theme_override_colors/font_color = Color(0.95, 0.85, 0.2, 1)
+theme_override_fonts/font = ExtResource("4_pressstart")
+text = "💀 VOCÊ FOI REINICIADO PELO RH!"
+label_settings = SubResource("LabelSettings_qblps")
+horizontal_alignment = 1
+vertical_alignment = 1
+autowrap_mode = 3
+
+[node name="MarqueeBannerCountdown" type="Panel" parent="HUD"]
+visible = false
+layout_mode = 0
+offset_left = -6.0
+offset_top = 420.0
+offset_right = 1280.0
+offset_bottom = 467.0
+mouse_filter = 2
+
+[node name="CountDownLabel" type="Label" parent="HUD/MarqueeBannerCountdown"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 13.0
+offset_top = 5.0
+offset_right = -17.0
+offset_bottom = -2.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+theme_override_colors/font_color = Color(0.95, 0.85, 0.2, 1)
+theme_override_fonts/font = ExtResource("3_vt323")
+theme_override_font_sizes/font_size = 18
+text = "VOLTANDO PARA O LOBBY...5"
+label_settings = SubResource("LabelSettings_qblps")
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Minimap" type="TextureRect" parent="HUD"]
+layout_mode = 0
+offset_left = 1028.0
+offset_top = 566.0
+offset_right = 1245.0
+offset_bottom = 698.0
+mouse_filter = 2

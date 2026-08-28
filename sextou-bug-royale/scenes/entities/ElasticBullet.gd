@@ -22,11 +22,12 @@ func _physics_process(delta: float) -> void:
 	var collision = move_and_collide(velocity * delta)
 	if collision:
 		var collider = collision.get_collider()
-		if collider == shooter:
+		if collider == null or collider == shooter or (shooter != null and (collider == shooter or collider.is_ancestor_of(shooter) or shooter.is_ancestor_of(collider))):
 			return
 			
 		if collider.has_method("take_damage"):
-			collider.take_damage(damage)
+			if not (shooter is RemotePlayer):
+				collider.take_damage(damage)
 			queue_free()
 		elif bounces_left > 0:
 			bounces_left -= 1
