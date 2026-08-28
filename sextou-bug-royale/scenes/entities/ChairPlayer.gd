@@ -271,6 +271,18 @@ func trigger_boost() -> void:
 	boost_timer = boost_duration
 	boost_cooldown_timer = boost_cooldown
 
+func sync_hp(new_hp: int) -> void:
+	if post_it_hp <= new_hp: return
+	post_it_hp = new_hp
+	hp_changed.emit(post_it_hp)
+	_update_post_its_visual()
+	_play_hit_feedback()
+	_spawn_damage_indicator()
+	GameManager.play_sfx("res://assets/sfx/Sound FX Starter Pack Vol. 1/Retro/Damage.wav")
+	
+	if post_it_hp <= 0:
+		die()
+
 func take_damage(amount: int) -> void:
 	if invulnerable_timer > 0:
 		return

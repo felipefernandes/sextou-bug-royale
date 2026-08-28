@@ -252,7 +252,8 @@ func _on_remote_player_shot(p_id: String, pos: Vector2, dir: Vector2, _item_type
 
 func _on_remote_player_hit(target_id: String, _attacker_id: String, remaining_hp: int) -> void:
 	if target_id == NetworkManager.local_player_id and is_instance_valid(local_player):
-		local_player.take_damage(1)
+		if local_player.has_method("sync_hp"):
+			local_player.sync_hp(remaining_hp)
 	elif remote_players.has(target_id):
 		var remote_inst = remote_players[target_id] as RemotePlayer
 		if is_instance_valid(remote_inst):

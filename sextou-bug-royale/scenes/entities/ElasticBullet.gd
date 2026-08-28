@@ -26,7 +26,8 @@ func _physics_process(delta: float) -> void:
 			return
 			
 		if collider.has_method("take_damage"):
-			collider.take_damage(damage)
+			if not (shooter is RemotePlayer):
+				collider.take_damage(damage)
 			queue_free()
 		elif bounces_left > 0:
 			bounces_left -= 1

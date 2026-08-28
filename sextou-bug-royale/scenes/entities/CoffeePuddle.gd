@@ -20,7 +20,7 @@ func _process(delta: float) -> void:
 			damage_timer = 0.0
 			for chair in chairs_inside:
 				if is_instance_valid(chair) and chair != shooter and (shooter == null or not chair.is_ancestor_of(shooter)):
-					if chair.has_method("take_damage"):
+					if chair.has_method("take_damage") and not (shooter is RemotePlayer):
 						chair.take_damage(1)
 
 func setup(puddle_shooter: Node2D) -> void:

@@ -38,7 +38,7 @@ func explode() -> void:
 		if is_instance_valid(p) and p != shooter:
 			var dist = global_position.distance_to(p.global_position)
 			if dist <= explosion_radius:
-				if p.has_method("take_damage"):
+				if p.has_method("take_damage") and not (shooter is RemotePlayer):
 					p.take_damage(1)
 				if "velocity" in p:
 					var push_dir = (p.global_position - global_position).normalized()

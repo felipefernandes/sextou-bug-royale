@@ -27,7 +27,10 @@ func _on_body_entered(body: Node2D) -> void:
 		return # Não causa dano ao próprio atirador
 	
 	if body.has_method("take_damage"):
-		body.take_damage(damage)
+		# Attacker Authority: Só aplicamos dano se o atirador for um jogador local (ChairPlayer ou BotPlayer).
+		# Se for um RemotePlayer, o dano será computado na máquina de quem atirou e recebido via NetworkManager.
+		if not (shooter is RemotePlayer):
+			body.take_damage(damage)
 		queue_free()
 	elif body is TileMapLayer or body is StaticBody2D:
 		queue_free()
