@@ -111,6 +111,8 @@ Ao executar tarefas, assuma as diretrizes das personas conforme a fase:
    - Use `int(float(a) / float(b))` para divisões inteiras warning-free em GDScript 4.
 10. **Câmera de Espectador Livre:**
    - Instancie uma `Camera2D` independente ao entrar no modo espectador para liberar a navegação livre pelo mapa e alternância de alvos sobreviventes via `TAB`.
+11. **Ícones de UI e Emojis em Builds Web (Wasm):**
+   - Nunca dependa de caracteres de emojis do sistema operacional para ícones de interface. No WebAssembly, a engine não tem acesso às fontes do SO hospedeiro, causando renderização monocromática ou ausência de glifos. Use sempre spritesheets de ícones recortados como `AtlasTexture` (.tres) integrados via `OptionButton.add_icon_item()`, `TextureRect` ou BBCode `[img]` em `RichTextLabel`.
 
 
 
