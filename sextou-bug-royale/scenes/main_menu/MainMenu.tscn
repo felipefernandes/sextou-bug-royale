@@ -65,10 +65,11 @@ layout_mode = 2
 theme_override_font_sizes/font_size = 20
 text = "Cargo Corporativo (Skin):"
 
-[node name="SkinPreviewLabel" type="Label" parent="MarginContainer/VBoxContainer/SkinHBox"]
+[node name="SkinPreviewRect" type="TextureRect" parent="MarginContainer/VBoxContainer/SkinHBox"]
+custom_minimum_size = Vector2(32, 32)
 layout_mode = 2
-theme_override_font_sizes/font_size = 24
-text = "💻"
+expand_mode = 1
+stretch_mode = 5
 
 [node name="SkinOptionButton" type="OptionButton" parent="MarginContainer/VBoxContainer/SkinHBox"]
 custom_minimum_size = Vector2(320, 40)

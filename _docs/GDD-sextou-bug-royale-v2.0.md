@@ -43,7 +43,7 @@ No Lobby da partida, o **Host (👑)** define o modo de controle para todos os p
 - **Modo Duo:** As cadeiras são operadas por **duplas de jogadores pareados aleatoriamente** pelo Lobby (1 Piloto responsável pela movimentação + 1 Artilheiro responsável pela mira e tiro).
 
 ### 4.2 Tela de Lobby Multiplayer & Privilégios do Host
-- **Identificação dos Players:** Cada jogador digita seu **Nickname** e escolhe sua **Skin/Classe Corporativa** (Dev 💻, QA 🦺, Designer 🎨, Analista 📊, PM 📢).
+- **Identificação dos Players:** Cada jogador digita seu **Nickname** e escolhe sua **Skin/Classe Corporativa** (Dev 💻, QA 🦺, Designer 🎨, Game Designer 🎲, Analista 📊, PM ⭐).
 - **Privilégios do Host (👑):**
   - **Modo de Jogo:** Escolha entre `Battle Royale (BR)` e `Team Deathmatch (TDM)`.
   - **Modo de Controle:** Escolha entre `"Solo"` e `"Duo"`.
@@ -83,6 +83,7 @@ A jogabilidade é otimizada para Teclado + Mouse em duplas:
 - **Dev:** Capuz, fone de ouvido gigante e xícara de café.
 - **QA:** Capacete de obra e lente de aumento.
 - **Designer:** Boina, tablet de desenho e paleta de cores.
+- **Game Designer:** Dados de RPG, caderneta de regras e protótipos de papel.
 - **Analista:** Calculadora no bolso e planilhas flutuando.
 - **PM:** Megafone e quadro Kanban.
 

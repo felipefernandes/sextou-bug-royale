@@ -12,7 +12,10 @@ enum BotState {
 var current_state: BotState = BotState.PATROL
 var target_enemy: Node2D = null
 var patrol_timer: float = 0.0
-var patrol_dir: Vector2 = Vector2.RIGHT
+var patrol_dir: Vector2 = Vector2.DOWN
+
+@onready var bot_sprite: Sprite2D = get_node_or_null("Sprite2D")
+@onready var bot_anim: AnimationPlayer = get_node_or_null("Sprite2D/AnimationPlayer")
 
 func _ready() -> void:
 	add_to_group("bots")
@@ -20,20 +23,16 @@ func _ready() -> void:
 	# Bots não possuem invulnerabilidade de spawn
 	invulnerable_timer = 0.0
 	
-	# Ajustar atributos do Bot para deixá-lo mais fácil e equilibrado
+	# Ajustar atributos do Bot para deixá-lo equilibrado
 	max_speed = 180.0 # Mais lento que o jogador (350.0)
-	fire_rate = 1.4  # Atira uma vez a cada 1.4 segundos (muito mais cadenciado)
-	turn_speed = 3.5
-	
-	# Visual Glitch/Bug Inimigo ("Eles são os Bugs!")
-	var visual = $ChairVisual
-	if visual:
-		visual.color = Color(0.65, 0.15, 0.85, 1.0) # Glitch Roxo Pixelado
+	fire_rate = 1.4  # Atira uma vez a cada 1.4 segundos
+	turn_speed = 4.0
 
 func _physics_process(delta: float) -> void:
 	_handle_timers(delta)
 	_scan_for_targets()
 	_update_ai_state(delta)
+	_update_bot_animation()
 	move_and_slide()
 
 func _scan_for_targets() -> void:
@@ -78,10 +77,9 @@ func _do_patrol(delta: float) -> void:
 		global_position.x = clamp(global_position.x, 50.0, 2510.0)
 		global_position.y = clamp(global_position.y, 50.0, 1390.0)
 	
-	var target_angle = patrol_dir.angle()
-	rotation = lerp_angle(rotation, target_angle, turn_speed * delta)
-	current_heading = Vector2.RIGHT.rotated(rotation)
-	velocity = velocity.move_toward(current_heading * max_speed * 0.5, acceleration * delta)
+	# Mirar a arma na direção de patrulha
+	gun_anchor.rotation = lerp_angle(gun_anchor.rotation, patrol_dir.angle(), turn_speed * delta)
+	velocity = velocity.move_toward(patrol_dir.normalized() * (max_speed * 0.5), acceleration * delta)
 
 func _do_engage(delta: float) -> void:
 	if target_enemy == null:
@@ -90,15 +88,12 @@ func _do_engage(delta: float) -> void:
 	var dir_to_target = (target_enemy.global_position - global_position).normalized()
 	
 	# Mirar suavemente no inimigo
-	gun_anchor.rotation = lerp_angle(gun_anchor.rotation, dir_to_target.angle() - rotation, turn_speed * delta)
+	gun_anchor.rotation = lerp_angle(gun_anchor.rotation, dir_to_target.angle(), turn_speed * delta)
 	
 	# Aproximar-se devagar
 	var dist = global_position.distance_to(target_enemy.global_position)
 	if dist > attack_radius * 0.5:
-		var target_angle = dir_to_target.angle()
-		rotation = lerp_angle(rotation, target_angle, turn_speed * delta)
-		current_heading = Vector2.RIGHT.rotated(rotation)
-		velocity = velocity.move_toward(current_heading * max_speed, acceleration * delta)
+		velocity = velocity.move_toward(dir_to_target * max_speed, acceleration * delta)
 	else:
 		velocity = velocity.move_toward(Vector2.ZERO, normal_friction * delta)
 		
@@ -106,20 +101,45 @@ func _do_engage(delta: float) -> void:
 	if fire_cooldown_timer <= 0:
 		shoot()
 
+func _update_bot_animation() -> void:
+	if bot_sprite == null:
+		return
+		
+	var speed = velocity.length()
+	
+	if speed > 10.0:
+		if bot_anim != null and bot_anim.has_animation("moving") and bot_anim.current_animation != "moving":
+			bot_anim.play("moving")
+			
+		# Controle de orientação por Flip (sem girar a raiz do nó para não ficar de cabeça para baixo)
+		if absf(velocity.y) >= absf(velocity.x):
+			# Movimentação vertical dominante
+			bot_sprite.flip_h = false
+			if velocity.y < -10.0:
+				bot_sprite.flip_v = true  # Indo para CIMA (inverte o sprite base que aponta para baixo)
+			elif velocity.y > 10.0:
+				bot_sprite.flip_v = false # Indo para BAIXO (orientação padrão)
+		else:
+			# Movimentação horizontal dominante
+			bot_sprite.flip_v = false
+			if velocity.x < -10.0:
+				bot_sprite.flip_h = true  # Indo para a ESQUERDA
+			elif velocity.x > 10.0:
+				bot_sprite.flip_h = false # Indo para a DIREITA
+	else:
+		if bot_anim != null and bot_anim.has_animation("idle") and bot_anim.current_animation != "idle":
+			bot_anim.play("idle")
+
 func reveal_real_skin() -> void:
-	# Desativar o disfarce de Bug roxo no modo espectador e mostrar a skin corporativa real
-	var visual = $ChairVisual
-	if visual:
-		visual.color = Color(0.95, 0.5, 0.2, 1.0) # Revela a skin corporativa real do bot
+	# Compatibilidade com modo espectador
+	pass
 
 func take_damage(amount: int) -> void:
-	# Feedback visual de impacto (Piscar branco/vermelho brilhante ao ser atingido)
-	var visual = $ChairVisual
-	if visual:
-		visual.color = Color(1.0, 1.0, 1.0, 1.0)
+	if bot_sprite:
+		var orig_mod = bot_sprite.modulate
+		bot_sprite.modulate = Color(2.0, 0.4, 0.4, 1.0)
 		get_tree().create_timer(0.15).timeout.connect(func():
-			if is_instance_valid(self) and is_instance_valid(visual):
-				visual.color = Color(0.85, 0.2, 0.2, 1.0)
+			if is_instance_valid(self) and is_instance_valid(bot_sprite):
+				bot_sprite.modulate = orig_mod
 		)
-		
 	super.take_damage(amount)

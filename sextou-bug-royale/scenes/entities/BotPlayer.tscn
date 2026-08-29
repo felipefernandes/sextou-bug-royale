@@ -1,26 +1,90 @@
-[gd_scene load_steps=3 format=3 uid="uid://bot_player_001"]
+[gd_scene format=3 uid="uid://cjvsed66u34ft"]
 
-[ext_resource type="Script" path="res://scenes/entities/BotPlayer.gd" id="1_bot"]
+[ext_resource type="Script" uid="uid://b78wrcxqooywy" path="res://scenes/entities/BotPlayer.gd" id="1_bot"]
+[ext_resource type="Texture2D" uid="uid://c5vuj38wj3bk8" path="res://assets/beetle.png" id="2_dqewp"]
+[ext_resource type="Shader" uid="uid://cukfmqc1i3jn7" path="res://scenes/entities/BotPlayer.gdshader" id="3_shader"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_bot"]
 radius = 22.0
 
-[node name="BotPlayer" type="CharacterBody2D"]
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_beetle"]
+shader = ExtResource("3_shader")
+shader_parameter/key_color = Color(1, 0, 1, 1)
+shader_parameter/tolerance = 0.2
+
+[sub_resource type="Animation" id="Animation_dqewp"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:frame_coords")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [Vector2i(0, 0)]
+}
+
+[sub_resource type="Animation" id="Animation_0if13"]
+resource_name = "idle"
+length = 0.2
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:frame_coords")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [Vector2i(0, 0)]
+}
+
+[sub_resource type="Animation" id="Animation_ofxh7"]
+resource_name = "moving"
+length = 0.53333336
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:frame_coords")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.13333334, 0.26666668, 0.4),
+"transitions": PackedFloat32Array(1, 1, 1, 1),
+"update": 1,
+"values": [Vector2i(0, 0), Vector2i(1, 0), Vector2i(2, 0), Vector2i(3, 0)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_dvtpe"]
+_data = {
+&"RESET": SubResource("Animation_dqewp"),
+&"idle": SubResource("Animation_0if13"),
+&"moving": SubResource("Animation_ofxh7")
+}
+
+[node name="BotPlayer" type="CharacterBody2D" unique_id=202985530]
 collision_layer = 2
 collision_mask = 7
 script = ExtResource("1_bot")
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=34442272]
 shape = SubResource("CircleShape2D_bot")
 
-[node name="ChairVisual" type="ColorRect" parent="."]
+[node name="ChairVisual" type="ColorRect" parent="." unique_id=1367776522]
+visible = false
 offset_left = -18.0
 offset_top = -18.0
 offset_right = 18.0
 offset_bottom = 18.0
 color = Color(0.85, 0.2, 0.2, 1)
 
-[node name="ChairSeat" type="ColorRect" parent="ChairVisual"]
+[node name="ChairSeat" type="ColorRect" parent="ChairVisual" unique_id=359387736]
+visible = false
 layout_mode = 0
 offset_left = 4.0
 offset_top = 4.0
@@ -28,37 +92,49 @@ offset_right = 32.0
 offset_bottom = 32.0
 color = Color(0.5, 0.1, 0.1, 1)
 
-[node name="GunAnchor" type="Node2D" parent="."]
+[node name="GunAnchor" type="Node2D" parent="." unique_id=1021245942]
 
-[node name="GunVisual" type="ColorRect" parent="GunAnchor"]
+[node name="GunVisual" type="ColorRect" parent="GunAnchor" unique_id=151355063]
 offset_left = 10.0
 offset_top = -3.0
 offset_right = 26.0
 offset_bottom = 3.0
 color = Color(0.3, 0.3, 0.3, 1)
 
-[node name="Muzzle" type="Marker2D" parent="GunAnchor"]
+[node name="Muzzle" type="Marker2D" parent="GunAnchor" unique_id=288584196]
 position = Vector2(28, 0)
 
-[node name="PostItsContainer" type="Node2D" parent="."]
+[node name="PostItsContainer" type="Node2D" parent="." unique_id=1535520633]
 
-[node name="PostIt1" type="ColorRect" parent="PostItsContainer"]
+[node name="PostIt1" type="ColorRect" parent="PostItsContainer" unique_id=1286275532]
 offset_left = -16.0
 offset_top = -14.0
 offset_right = -8.0
 offset_bottom = -6.0
 color = Color(0.95, 0.9, 0.2, 1)
 
-[node name="PostIt2" type="ColorRect" parent="PostItsContainer"]
+[node name="PostIt2" type="ColorRect" parent="PostItsContainer" unique_id=14789151]
 offset_left = -16.0
 offset_top = -4.0
 offset_right = -8.0
 offset_bottom = 4.0
 color = Color(0.95, 0.9, 0.2, 1)
 
-[node name="PostIt3" type="ColorRect" parent="PostItsContainer"]
+[node name="PostIt3" type="ColorRect" parent="PostItsContainer" unique_id=43119147]
 offset_left = -16.0
 offset_top = 6.0
 offset_right = -8.0
 offset_bottom = 14.0
 color = Color(0.95, 0.9, 0.2, 1)
+
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=639059968]
+texture_filter = 1
+material = SubResource("ShaderMaterial_beetle")
+position = Vector2(-1.9999999, -4.9999995)
+scale = Vector2(0.7, 0.7)
+texture = ExtResource("2_dqewp")
+hframes = 5
+vframes = 4
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="Sprite2D" unique_id=1596179994]
+libraries/ = SubResource("AnimationLibrary_dvtpe")

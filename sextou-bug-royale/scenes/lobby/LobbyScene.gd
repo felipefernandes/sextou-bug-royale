@@ -56,27 +56,31 @@ func _setup_ui_options() -> void:
 	for i in range(skins.size()):
 		var key = skins[i]
 		var info = GameManager.skins_info[key]
-		skin_option.add_item(info["icon"] + " " + info["name"], i)
+		var icon = GameManager.get_skin_icon(key)
+		if icon:
+			skin_option.add_icon_item(icon, info["name"], i)
+		else:
+			skin_option.add_item(info["name"], i)
 		
 	game_mode_option.clear()
-	game_mode_option.add_item("🏆 Battle Royale (BR)", 0)
-	game_mode_option.add_item("⚔️ Team Deathmatch (TDM)", 1)
+	game_mode_option.add_icon_item(GameManager.get_menu_icon("BR"), "Battle Royale (BR)", 0)
+	game_mode_option.add_icon_item(GameManager.get_menu_icon("TDM"), "Team Deathmatch (TDM)", 1)
 	
 	control_mode_option.clear()
-	control_mode_option.add_item("🕹️ Solo (Movimento + Tiro)", 0)
-	control_mode_option.add_item("🤝 Duo (Piloto + Artilheiro)", 1)
+	control_mode_option.add_icon_item(GameManager.get_menu_icon("SOLO"), "Solo (Movimento + Tiro)", 0)
+	control_mode_option.add_icon_item(GameManager.get_menu_icon("DUO"), "Duo (Piloto + Artilheiro)", 1)
 	
 	duration_option.clear()
-	duration_option.add_item("⏱️ 3 Minutos", 0)
-	duration_option.add_item("⏱️ 5 Minutos", 1)
-	duration_option.add_item("⏱️ 10 Minutos", 2)
+	duration_option.add_icon_item(GameManager.get_menu_icon("TIMER"), "3 Minutos", 0)
+	duration_option.add_icon_item(GameManager.get_menu_icon("TIMER"), "5 Minutos", 1)
+	duration_option.add_icon_item(GameManager.get_menu_icon("TIMER"), "10 Minutos", 2)
 	
 	var avatar_option = $MarginContainer/VBoxContainer/ProfileHBox.get_node_or_null("AvatarOptionButton") as OptionButton
 	if avatar_option:
 		avatar_option.clear()
 		for i in range(GameManager.avatars_list.size()):
 			var _file_name = GameManager.avatars_list[i]
-			avatar_option.add_item("👤 Avatar " + str(i + 1), i)
+			avatar_option.add_item("Avatar " + str(i + 1), i)
 		avatar_option.item_selected.connect(func(idx):
 			if idx >= 0 and idx < GameManager.avatars_list.size():
 				GameManager.selected_avatar = GameManager.avatars_list[idx]
@@ -100,7 +104,7 @@ func _connect_signals() -> void:
 
 func _on_cold_start_progress(message: String) -> void:
 	if not NetworkManager.is_connected_to_ws:
-		players_list_label.text = "[color=#F39C12][b]⏳ STATUS DA FIRMA:[/b][/color]\n\n" + message
+		players_list_label.text = "[color=#F39C12][b]STATUS DA FIRMA:[/b][/color]\n\n" + message
 
 func _on_connection_established(p_id: String, is_host: bool) -> void:
 	if GameManager.player_nickname.is_empty() or GameManager.player_nickname == "Estagiário":
@@ -116,11 +120,11 @@ func _update_host_ui_state(is_host: bool) -> void:
 	
 	if is_host:
 		start_button.disabled = false
-		start_button.text = "🚀 INICIAR PARTIDA EM PRODUÇÃO (HOST)"
+		start_button.text = "INICIAR PARTIDA EM PRODUÇÃO (HOST)"
 		start_button.modulate = Color(1, 1, 1, 1)
 	else:
 		start_button.disabled = true
-		start_button.text = "⏳ AGUARDANDO O HOST INICIAR A PARTIDA..."
+		start_button.text = "AGUARDANDO O HOST INICIAR A PARTIDA..."
 		start_button.modulate = Color(0.8, 0.8, 0.8, 0.8)
 
 func _on_profile_changed(_text: String) -> void:
@@ -159,14 +163,14 @@ func _on_room_state_updated(state: Dictionary) -> void:
 			host_name = p_dict.get("nickname", "Host")
 			break
 	
-	# Atualizar Lista de Players
-	var list_text = "[color=#F1C40F][b]👥 PLAYERS CONECTADOS (" + str(players.size()) + "):[/b][/color]\n\n"
+	# Atualizar Lista de Players com ícones AtlasTexture
+	var list_text = "[color=#F1C40F][b]PLAYERS CONECTADOS (" + str(players.size()) + "):[/b][/color]\n\n"
 	for p in players:
 		var p_dict = p as Dictionary
-		var host_tag = " [color=#E74C3C][👑 HOST][/color]" if p_dict.get("isHost", false) else ""
+		var host_tag = " [color=#E74C3C][b][HOST][/b][/color]" if p_dict.get("isHost", false) else ""
 		var skin_key = p_dict.get("skin", "DEV") as String
-		var skin_icon = GameManager.skins_info.get(skin_key, {}).get("icon", "💻")
-		list_text += skin_icon + " " + p_dict.get("nickname", "") + host_tag + "\n"
+		var icon_path = GameManager.skins_info.get(skin_key, {}).get("icon_tres", "res://assets/icons/icon_dev.tres")
+		list_text += "[img=18x18]" + icon_path + "[/img] " + p_dict.get("nickname", "") + host_tag + "\n"
 		
 	players_list_label.text = list_text
 	
@@ -181,16 +185,16 @@ func _on_room_state_updated(state: Dictionary) -> void:
 		# Visão formatada rica para jogadores Não-Host
 		var mode_name = "Battle Royale (BR)" if g_mode == "BR" else "Team Deathmatch (TDM)"
 		var ctrl_name = "Solo Intern (1x1)" if c_mode == "SOLO" else "Duplas Pareadas (Piloto + Artilheiro)"
-		var non_host_text = "[color=#E74C3C][b]👑 LÍDER DO DEPLOY:[/b][/color] [b]" + host_name + "[/b]\n\n"
-		non_host_text += "[color=#3498DB][b]⚙️ SETUP DA PARTIDA:[/b][/color]\n"
+		var non_host_text = "[color=#E74C3C][b]LÍDER DO DEPLOY:[/b][/color] [b]" + host_name + "[/b]\n\n"
+		non_host_text += "[color=#3498DB][b]SETUP DA PARTIDA:[/b][/color]\n"
 		non_host_text += "• [b]Modo:[/b] " + mode_name + "\n"
 		non_host_text += "• [b]Controle:[/b] " + ctrl_name + "\n"
 		non_host_text += "• [b]Duração:[/b] " + str(dur) + " min\n\n"
-		non_host_text += "[color=#2ECC71][i]⏳ Aguardando o líder iniciar o deploy...[/i][/color]"
+		non_host_text += "[color=#2ECC71][i]Aguardando o líder iniciar o deploy...[/i][/color]"
 		non_host_info_label.text = non_host_text
 		
 	# Atualizar Painel de Duplas Pareadas
-	var duos_text = "[color=#3498DB][b]🤝 PAREAMENTO DE DUPLAS (" + c_mode + "):[/b][/color]\n\n"
+	var duos_text = "[color=#3498DB][b]PAREAMENTO DE DUPLAS (" + c_mode + "):[/b][/color]\n\n"
 	if c_mode == "SOLO":
 		duos_text += "[i]Modo Solo Ativo: Cada participante controla sua própria cadeira.[/i]"
 	else:
@@ -205,10 +209,11 @@ func _on_start_pressed() -> void:
 		return
 	_on_profile_changed(nickname_input.text)
 	start_button.disabled = true
-	start_button.text = "🚀 ENVIANDO DEPLOY PARA A FIRMA..."
+	start_button.text = "ENVIANDO DEPLOY PARA A FIRMA..."
 	NetworkManager.start_match()
 
 func _on_match_started(data: Dictionary) -> void:
 	var c_mode = data.get("controlMode", "SOLO") as String
 	GameManager.current_control_mode = GameManager.ControlMode.SOLO_INTERN if c_mode == "SOLO" else GameManager.ControlMode.DUO_LOCAL
 	get_tree().change_scene_to_file(GameManager.get_random_map_scene())
+
