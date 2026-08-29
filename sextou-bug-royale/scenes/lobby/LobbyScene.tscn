@@ -40,7 +40,7 @@ theme_override_constants/separation = 15
 layout_mode = 2
 theme_override_colors/font_color = Color(0.95, 0.85, 0.2, 1)
 theme_override_font_sizes/font_size = 28
-text = "🏢 LOBBY DE DEPLOY MULTIPLAYER"
+text = "LOBBY DE DEPLOY MULTIPLAYER"
 horizontal_alignment = 1
 
 [node name="ProfileHBox" type="HBoxContainer" parent="MarginContainer/VBoxContainer"]
@@ -91,7 +91,7 @@ theme_override_constants/separation = 10
 [node name="HostTitle" type="Label" parent="MarginContainer/VBoxContainer/MainHBox/HostSettingsVBox"]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.9, 0.3, 0.3, 1)
-text = "👑 CONFIGURAÇÕES DO HOST"
+text = "CONFIGURAÇÕES DO HOST"
 
 [node name="GameModeLabel" type="Label" parent="MarginContainer/VBoxContainer/MainHBox/HostSettingsVBox"]
 layout_mode = 2
@@ -137,4 +137,4 @@ layout_mode = 2
 size_flags_horizontal = 4
 theme_override_colors/font_color = Color(1, 1, 1, 1)
 theme_override_font_sizes/font_size = 18
-text = "🚀 INICIAR PARTIDA EM PRODUÇÃO"
+text = "INICIAR PARTIDA EM PRODUÇÃO"

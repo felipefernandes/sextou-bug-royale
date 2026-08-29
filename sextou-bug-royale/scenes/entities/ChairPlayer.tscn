@@ -204,7 +204,7 @@ color = Color(0.95, 0.9, 0.2, 1)
 
 [node name="ChairPlayerSprite" type="Sprite2D" parent="." unique_id=226837662]
 position = Vector2(1, 0)
-scale = Vector2(0.12, 0.12)
+scale = Vector2(0.15, 0.15)
 texture = ExtResource("2_csxly")
 hframes = 9
 

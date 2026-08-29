@@ -1,9 +1,9 @@
-[gd_scene load_steps=29 format=3 uid="uid://officemap2_server_room_001"]
+[gd_scene format=3 uid="uid://br8mojpllcysl"]
 
-[ext_resource type="Script" path="res://scenes/game/OfficeMap2.gd" id="1_office"]
+[ext_resource type="Script" uid="uid://8rvc6ttpeyae" path="res://scenes/game/OfficeMap2.gd" id="1_office"]
 [ext_resource type="PackedScene" path="res://scenes/game/RebootZone.tscn" id="2_reboot"]
 [ext_resource type="PackedScene" path="res://scenes/entities/DeployBox.tscn" id="3_box"]
-[ext_resource type="PackedScene" uid="uid://game_hud_component_001" path="res://scenes/ui/GameHUD.tscn" id="4_hud"]
+[ext_resource type="PackedScene" uid="uid://2dgr16qgl0ev" path="res://scenes/ui/GameHUD.tscn" id="4_hud"]
 [ext_resource type="FontFile" uid="uid://4pkg587snejh" path="res://assets/fonts/PressStart2P-Regular.ttf" id="5_pressstart"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_wall_h"]
@@ -15,11 +15,11 @@ size = Vector2(20, 1440)
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_div_300"]
 size = Vector2(300, 16)
 
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_div_380"]
-size = Vector2(380, 16)
-
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_div_v220"]
 size = Vector2(16, 220)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_div_380"]
+size = Vector2(380, 16)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_core_tower"]
 size = Vector2(80, 80)
@@ -39,102 +39,102 @@ size = Vector2(30, 260)
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_workbench"]
 size = Vector2(200, 56)
 
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_chiller"]
-size = Vector2(160, 80)
-
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_cabinet"]
 size = Vector2(40, 180)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_chiller"]
+size = Vector2(160, 80)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_guard_desk"]
 size = Vector2(120, 36)
 
-[node name="OfficeMap" type="Node2D"]
+[node name="OfficeMap" type="Node2D" unique_id=1380797258]
 script = ExtResource("1_office")
 
-[node name="Background" type="ColorRect" parent="."]
+[node name="Background" type="ColorRect" parent="." unique_id=978528912]
 offset_right = 2560.0
 offset_bottom = 1440.0
 color = Color(0.0588235, 0.0823529, 0.121569, 1)
 metadata/_edit_lock_ = true
 
-[node name="FloorDetails" type="Node2D" parent="Background"]
+[node name="FloorDetails" type="Node2D" parent="Background" unique_id=1016700655]
 metadata/_edit_lock_ = true
 
-[node name="ZoneNOC_Floor" type="ColorRect" parent="Background/FloorDetails"]
+[node name="ZoneNOC_Floor" type="ColorRect" parent="Background/FloorDetails" unique_id=1699077089]
 offset_left = 20.0
 offset_top = 468.0
 offset_right = 872.0
 offset_bottom = 972.0
 color = Color(0.0823529, 0.117647, 0.168627, 1)
 
-[node name="ZoneMainframe_Floor" type="ColorRect" parent="Background/FloorDetails"]
+[node name="ZoneMainframe_Floor" type="ColorRect" parent="Background/FloorDetails" unique_id=766079152]
 offset_left = 888.0
 offset_top = 468.0
 offset_right = 1672.0
 offset_bottom = 972.0
 color = Color(0.0980392, 0.141176, 0.207843, 1)
 
-[node name="ZoneRacks_Floor" type="ColorRect" parent="Background/FloorDetails"]
+[node name="ZoneRacks_Floor" type="ColorRect" parent="Background/FloorDetails" unique_id=978109462]
 offset_left = 1688.0
 offset_top = 468.0
 offset_right = 2540.0
 offset_bottom = 972.0
 color = Color(0.0745098, 0.105882, 0.152941, 1)
 
-[node name="ZoneHardware_Floor" type="ColorRect" parent="Background/FloorDetails"]
+[node name="ZoneHardware_Floor" type="ColorRect" parent="Background/FloorDetails" unique_id=1668594250]
 offset_left = 20.0
 offset_top = 20.0
 offset_right = 872.0
 offset_bottom = 452.0
 color = Color(0.0784314, 0.0980392, 0.137255, 1)
 
-[node name="ZoneCooling_Floor" type="ColorRect" parent="Background/FloorDetails"]
+[node name="ZoneCooling_Floor" type="ColorRect" parent="Background/FloorDetails" unique_id=352089097]
 offset_left = 20.0
 offset_top = 988.0
 offset_right = 872.0
 offset_bottom = 1420.0
 color = Color(0.0666667, 0.0941176, 0.133333, 1)
 
-[node name="ZoneUPS_Floor" type="ColorRect" parent="Background/FloorDetails"]
+[node name="ZoneUPS_Floor" type="ColorRect" parent="Background/FloorDetails" unique_id=376924641]
 offset_left = 1688.0
 offset_top = 20.0
 offset_right = 2540.0
 offset_bottom = 452.0
 color = Color(0.0784314, 0.105882, 0.14902, 1)
 
-[node name="ZoneBattery_Floor" type="ColorRect" parent="Background/FloorDetails"]
+[node name="ZoneBattery_Floor" type="ColorRect" parent="Background/FloorDetails" unique_id=1049773482]
 offset_left = 1688.0
 offset_top = 988.0
 offset_right = 2540.0
 offset_bottom = 1420.0
 color = Color(0.0666667, 0.0941176, 0.133333, 1)
 
-[node name="ConduitCenterH" type="ColorRect" parent="Background/FloorDetails"]
+[node name="ConduitCenterH" type="ColorRect" parent="Background/FloorDetails" unique_id=933342506]
 offset_left = 20.0
 offset_top = 716.0
 offset_right = 2540.0
 offset_bottom = 724.0
-color = Color(0.0, 0.823529, 0.827451, 0.25)
+color = Color(0, 0.823529, 0.827451, 0.25)
 
-[node name="ConduitCenterV" type="ColorRect" parent="Background/FloorDetails"]
+[node name="ConduitCenterV" type="ColorRect" parent="Background/FloorDetails" unique_id=1994415274]
 offset_left = 1276.0
 offset_top = 20.0
 offset_right = 1284.0
 offset_bottom = 1420.0
-color = Color(0.0, 0.823529, 0.827451, 0.25)
+color = Color(0, 0.823529, 0.827451, 0.25)
 
-[node name="ZoneLabelMainframe" type="Label" parent="Background/FloorDetails"]
+[node name="ZoneLabelMainframe" type="Label" parent="Background/FloorDetails" unique_id=1605337781]
 offset_left = 1130.0
 offset_top = 490.0
 offset_right = 1430.0
 offset_bottom = 520.0
-theme_override_colors/font_color = Color(0.0, 0.82, 0.82, 0.4)
+theme_override_colors/font_color = Color(0, 0.82, 0.82, 0.4)
 theme_override_fonts/font = ExtResource("5_pressstart")
 theme_override_font_sizes/font_size = 14
 text = "[ MAINFRAME CORE ]"
 horizontal_alignment = 1
 
-[node name="ZoneLabelNOC" type="Label" parent="Background/FloorDetails"]
+[node name="ZoneLabelNOC" type="Label" parent="Background/FloorDetails" unique_id=1411184619]
 offset_left = 320.0
 offset_top = 490.0
 offset_right = 620.0
@@ -145,7 +145,7 @@ theme_override_font_sizes/font_size = 14
 text = "[ NOC CONTROL ROOM ]"
 horizontal_alignment = 1
 
-[node name="ZoneLabelRacks" type="Label" parent="Background/FloorDetails"]
+[node name="ZoneLabelRacks" type="Label" parent="Background/FloorDetails" unique_id=1859829216]
 offset_left = 1920.0
 offset_top = 490.0
 offset_right = 2320.0
@@ -156,891 +156,851 @@ theme_override_font_sizes/font_size = 14
 text = "[ SERVER CORRIDORS ]"
 horizontal_alignment = 1
 
-[node name="Walls" type="Node2D" parent="."]
+[node name="Walls" type="Node2D" parent="." unique_id=1374754015]
 
-[node name="WallTop" type="StaticBody2D" parent="Walls"]
+[node name="WallTop" type="StaticBody2D" parent="Walls" unique_id=1473351535]
 position = Vector2(1280, 10)
-collision_layer = 1
 collision_mask = 7
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Walls/WallTop"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Walls/WallTop" unique_id=62389682]
 shape = SubResource("RectangleShape2D_wall_h")
 
-[node name="Visual" type="ColorRect" parent="Walls/WallTop"]
+[node name="Visual" type="ColorRect" parent="Walls/WallTop" unique_id=1300758012]
 offset_left = -1280.0
 offset_top = -10.0
 offset_right = 1280.0
 offset_bottom = 10.0
 color = Color(0.18, 0.24, 0.32, 1)
 
-[node name="WallBottom" type="StaticBody2D" parent="Walls"]
+[node name="WallBottom" type="StaticBody2D" parent="Walls" unique_id=953607910]
 position = Vector2(1280, 1430)
-collision_layer = 1
 collision_mask = 7
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Walls/WallBottom"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Walls/WallBottom" unique_id=820983998]
 shape = SubResource("RectangleShape2D_wall_h")
 
-[node name="Visual" type="ColorRect" parent="Walls/WallBottom"]
+[node name="Visual" type="ColorRect" parent="Walls/WallBottom" unique_id=1702442085]
 offset_left = -1280.0
 offset_top = -10.0
 offset_right = 1280.0
 offset_bottom = 10.0
 color = Color(0.18, 0.24, 0.32, 1)
 
-[node name="WallLeft" type="StaticBody2D" parent="Walls"]
+[node name="WallLeft" type="StaticBody2D" parent="Walls" unique_id=401805953]
 position = Vector2(10, 720)
-collision_layer = 1
 collision_mask = 7
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Walls/WallLeft"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Walls/WallLeft" unique_id=1806578474]
 shape = SubResource("RectangleShape2D_wall_v")
 
-[node name="Visual" type="ColorRect" parent="Walls/WallLeft"]
+[node name="Visual" type="ColorRect" parent="Walls/WallLeft" unique_id=158156185]
 offset_left = -10.0
 offset_top = -720.0
 offset_right = 10.0
 offset_bottom = 720.0
 color = Color(0.18, 0.24, 0.32, 1)
 
-[node name="WallRight" type="StaticBody2D" parent="Walls"]
+[node name="WallRight" type="StaticBody2D" parent="Walls" unique_id=1237872276]
 position = Vector2(2550, 720)
-collision_layer = 1
 collision_mask = 7
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Walls/WallRight"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Walls/WallRight" unique_id=1394899519]
 shape = SubResource("RectangleShape2D_wall_v")
 
-[node name="Visual" type="ColorRect" parent="Walls/WallRight"]
+[node name="Visual" type="ColorRect" parent="Walls/WallRight" unique_id=19492149]
 offset_left = -10.0
 offset_top = -720.0
 offset_right = 10.0
 offset_bottom = 720.0
 color = Color(0.18, 0.24, 0.32, 1)
 
-[node name="RoomPartitions" type="Node2D" parent="."]
+[node name="RoomPartitions" type="Node2D" parent="." unique_id=624898864]
 
-[node name="Mainframe_NorthLeft" type="StaticBody2D" parent="RoomPartitions"]
+[node name="Mainframe_NorthLeft" type="StaticBody2D" parent="RoomPartitions" unique_id=1745201854]
 position = Vector2(1030, 460)
-collision_layer = 1
 collision_mask = 7
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="RoomPartitions/Mainframe_NorthLeft"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="RoomPartitions/Mainframe_NorthLeft" unique_id=1830521348]
 shape = SubResource("RectangleShape2D_div_300")
 
-[node name="Visual" type="ColorRect" parent="RoomPartitions/Mainframe_NorthLeft"]
+[node name="Visual" type="ColorRect" parent="RoomPartitions/Mainframe_NorthLeft" unique_id=1190953785]
 offset_left = -150.0
 offset_top = -8.0
 offset_right = 150.0
 offset_bottom = 8.0
 color = Color(0.15, 0.3, 0.42, 1)
 
-[node name="Mainframe_NorthRight" type="StaticBody2D" parent="RoomPartitions"]
+[node name="Mainframe_NorthRight" type="StaticBody2D" parent="RoomPartitions" unique_id=327435809]
 position = Vector2(1530, 460)
-collision_layer = 1
 collision_mask = 7
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="RoomPartitions/Mainframe_NorthRight"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="RoomPartitions/Mainframe_NorthRight" unique_id=400421200]
 shape = SubResource("RectangleShape2D_div_300")
 
-[node name="Visual" type="ColorRect" parent="RoomPartitions/Mainframe_NorthRight"]
+[node name="Visual" type="ColorRect" parent="RoomPartitions/Mainframe_NorthRight" unique_id=872422377]
 offset_left = -150.0
 offset_top = -8.0
 offset_right = 150.0
 offset_bottom = 8.0
 color = Color(0.15, 0.3, 0.42, 1)
 
-[node name="Mainframe_SouthLeft" type="StaticBody2D" parent="RoomPartitions"]
+[node name="Mainframe_SouthLeft" type="StaticBody2D" parent="RoomPartitions" unique_id=1169891756]
 position = Vector2(1030, 980)
-collision_layer = 1
 collision_mask = 7
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="RoomPartitions/Mainframe_SouthLeft"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="RoomPartitions/Mainframe_SouthLeft" unique_id=372091756]
 shape = SubResource("RectangleShape2D_div_300")
 
-[node name="Visual" type="ColorRect" parent="RoomPartitions/Mainframe_SouthLeft"]
+[node name="Visual" type="ColorRect" parent="RoomPartitions/Mainframe_SouthLeft" unique_id=1763116711]
 offset_left = -150.0
 offset_top = -8.0
 offset_right = 150.0
 offset_bottom = 8.0
 color = Color(0.15, 0.3, 0.42, 1)
 
-[node name="Mainframe_SouthRight" type="StaticBody2D" parent="RoomPartitions"]
+[node name="Mainframe_SouthRight" type="StaticBody2D" parent="RoomPartitions" unique_id=500653048]
 position = Vector2(1530, 980)
-collision_layer = 1
 collision_mask = 7
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="RoomPartitions/Mainframe_SouthRight"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="RoomPartitions/Mainframe_SouthRight" unique_id=2023743122]
 shape = SubResource("RectangleShape2D_div_300")
 
-[node name="Visual" type="ColorRect" parent="RoomPartitions/Mainframe_SouthRight"]
+[node name="Visual" type="ColorRect" parent="RoomPartitions/Mainframe_SouthRight" unique_id=2093955596]
 offset_left = -150.0
 offset_top = -8.0
 offset_right = 150.0
 offset_bottom = 8.0
 color = Color(0.15, 0.3, 0.42, 1)
 
-[node name="Mainframe_WestTop" type="StaticBody2D" parent="RoomPartitions"]
+[node name="Mainframe_WestTop" type="StaticBody2D" parent="RoomPartitions" unique_id=174781353]
 position = Vector2(880, 570)
-collision_layer = 1
 collision_mask = 7
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="RoomPartitions/Mainframe_WestTop"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="RoomPartitions/Mainframe_WestTop" unique_id=381333786]
 shape = SubResource("RectangleShape2D_div_v220")
 
-[node name="Visual" type="ColorRect" parent="RoomPartitions/Mainframe_WestTop"]
+[node name="Visual" type="ColorRect" parent="RoomPartitions/Mainframe_WestTop" unique_id=1440529898]
 offset_left = -8.0
 offset_top = -110.0
 offset_right = 8.0
 offset_bottom = 110.0
 color = Color(0.15, 0.3, 0.42, 1)
 
-[node name="Mainframe_WestBottom" type="StaticBody2D" parent="RoomPartitions"]
+[node name="Mainframe_WestBottom" type="StaticBody2D" parent="RoomPartitions" unique_id=1518628230]
 position = Vector2(880, 870)
-collision_layer = 1
 collision_mask = 7
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="RoomPartitions/Mainframe_WestBottom"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="RoomPartitions/Mainframe_WestBottom" unique_id=502113629]
 shape = SubResource("RectangleShape2D_div_v220")
 
-[node name="Visual" type="ColorRect" parent="RoomPartitions/Mainframe_WestBottom"]
+[node name="Visual" type="ColorRect" parent="RoomPartitions/Mainframe_WestBottom" unique_id=1656864049]
 offset_left = -8.0
 offset_top = -110.0
 offset_right = 8.0
 offset_bottom = 110.0
 color = Color(0.15, 0.3, 0.42, 1)
 
-[node name="Mainframe_EastTop" type="StaticBody2D" parent="RoomPartitions"]
+[node name="Mainframe_EastTop" type="StaticBody2D" parent="RoomPartitions" unique_id=494452384]
 position = Vector2(1680, 570)
-collision_layer = 1
 collision_mask = 7
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="RoomPartitions/Mainframe_EastTop"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="RoomPartitions/Mainframe_EastTop" unique_id=1105913728]
 shape = SubResource("RectangleShape2D_div_v220")
 
-[node name="Visual" type="ColorRect" parent="RoomPartitions/Mainframe_EastTop"]
+[node name="Visual" type="ColorRect" parent="RoomPartitions/Mainframe_EastTop" unique_id=972792499]
 offset_left = -8.0
 offset_top = -110.0
 offset_right = 8.0
 offset_bottom = 110.0
 color = Color(0.15, 0.3, 0.42, 1)
 
-[node name="Mainframe_EastBottom" type="StaticBody2D" parent="RoomPartitions"]
+[node name="Mainframe_EastBottom" type="StaticBody2D" parent="RoomPartitions" unique_id=1859301224]
 position = Vector2(1680, 870)
-collision_layer = 1
 collision_mask = 7
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="RoomPartitions/Mainframe_EastBottom"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="RoomPartitions/Mainframe_EastBottom" unique_id=189847597]
 shape = SubResource("RectangleShape2D_div_v220")
 
-[node name="Visual" type="ColorRect" parent="RoomPartitions/Mainframe_EastBottom"]
+[node name="Visual" type="ColorRect" parent="RoomPartitions/Mainframe_EastBottom" unique_id=1100993927]
 offset_left = -8.0
 offset_top = -110.0
 offset_right = 8.0
 offset_bottom = 110.0
 color = Color(0.15, 0.3, 0.42, 1)
 
-[node name="Divider_NW" type="StaticBody2D" parent="RoomPartitions"]
+[node name="Divider_NW" type="StaticBody2D" parent="RoomPartitions" unique_id=1559654190]
 position = Vector2(500, 460)
-collision_layer = 1
 collision_mask = 7
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="RoomPartitions/Divider_NW"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="RoomPartitions/Divider_NW" unique_id=604717964]
 shape = SubResource("RectangleShape2D_div_380")
 
-[node name="Visual" type="ColorRect" parent="RoomPartitions/Divider_NW"]
+[node name="Visual" type="ColorRect" parent="RoomPartitions/Divider_NW" unique_id=789460021]
 offset_left = -190.0
 offset_top = -8.0
 offset_right = 190.0
 offset_bottom = 8.0
 color = Color(0.2, 0.28, 0.38, 1)
 
-[node name="Divider_SW" type="StaticBody2D" parent="RoomPartitions"]
+[node name="Divider_SW" type="StaticBody2D" parent="RoomPartitions" unique_id=238214311]
 position = Vector2(500, 980)
-collision_layer = 1
 collision_mask = 7
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="RoomPartitions/Divider_SW"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="RoomPartitions/Divider_SW" unique_id=519222483]
 shape = SubResource("RectangleShape2D_div_380")
 
-[node name="Visual" type="ColorRect" parent="RoomPartitions/Divider_SW"]
+[node name="Visual" type="ColorRect" parent="RoomPartitions/Divider_SW" unique_id=851275956]
 offset_left = -190.0
 offset_top = -8.0
 offset_right = 190.0
 offset_bottom = 8.0
 color = Color(0.2, 0.28, 0.38, 1)
 
-[node name="Divider_NE" type="StaticBody2D" parent="RoomPartitions"]
+[node name="Divider_NE" type="StaticBody2D" parent="RoomPartitions" unique_id=1338884537]
 position = Vector2(2060, 460)
-collision_layer = 1
 collision_mask = 7
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="RoomPartitions/Divider_NE"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="RoomPartitions/Divider_NE" unique_id=846036838]
 shape = SubResource("RectangleShape2D_div_380")
 
-[node name="Visual" type="ColorRect" parent="RoomPartitions/Divider_NE"]
+[node name="Visual" type="ColorRect" parent="RoomPartitions/Divider_NE" unique_id=1000766230]
 offset_left = -190.0
 offset_top = -8.0
 offset_right = 190.0
 offset_bottom = 8.0
 color = Color(0.2, 0.28, 0.38, 1)
 
-[node name="Divider_SE" type="StaticBody2D" parent="RoomPartitions"]
+[node name="Divider_SE" type="StaticBody2D" parent="RoomPartitions" unique_id=326038831]
 position = Vector2(2060, 980)
-collision_layer = 1
 collision_mask = 7
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="RoomPartitions/Divider_SE"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="RoomPartitions/Divider_SE" unique_id=1577367925]
 shape = SubResource("RectangleShape2D_div_380")
 
-[node name="Visual" type="ColorRect" parent="RoomPartitions/Divider_SE"]
+[node name="Visual" type="ColorRect" parent="RoomPartitions/Divider_SE" unique_id=1647533766]
 offset_left = -190.0
 offset_top = -8.0
 offset_right = 190.0
 offset_bottom = 8.0
 color = Color(0.2, 0.28, 0.38, 1)
 
-[node name="ServerFurniture" type="Node2D" parent="."]
+[node name="ServerFurniture" type="Node2D" parent="." unique_id=1887069881]
 
-[node name="CoreTower1" type="StaticBody2D" parent="ServerFurniture"]
+[node name="CoreTower1" type="StaticBody2D" parent="ServerFurniture" unique_id=53706287]
 position = Vector2(1120, 620)
-collision_layer = 1
 collision_mask = 7
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="ServerFurniture/CoreTower1"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="ServerFurniture/CoreTower1" unique_id=2090165644]
 shape = SubResource("RectangleShape2D_core_tower")
 
-[node name="Visual" type="ColorRect" parent="ServerFurniture/CoreTower1"]
+[node name="Visual" type="ColorRect" parent="ServerFurniture/CoreTower1" unique_id=1454135261]
 offset_left = -40.0
 offset_top = -40.0
 offset_right = 40.0
 offset_bottom = 40.0
 color = Color(0.12, 0.16, 0.22, 1)
 
-[node name="Light1" type="ColorRect" parent="ServerFurniture/CoreTower1"]
+[node name="Light1" type="ColorRect" parent="ServerFurniture/CoreTower1" unique_id=1815534645]
 offset_left = -30.0
 offset_top = -30.0
 offset_right = 30.0
 offset_bottom = -24.0
-color = Color(0.0, 0.85, 0.9, 1)
+color = Color(0, 0.85, 0.9, 1)
 
-[node name="Light2" type="ColorRect" parent="ServerFurniture/CoreTower1"]
+[node name="Light2" type="ColorRect" parent="ServerFurniture/CoreTower1" unique_id=1931440589]
 offset_left = -30.0
 offset_top = 24.0
 offset_right = 30.0
 offset_bottom = 30.0
 color = Color(0.2, 0.9, 0.3, 1)
 
-[node name="CoreTower2" type="StaticBody2D" parent="ServerFurniture"]
+[node name="CoreTower2" type="StaticBody2D" parent="ServerFurniture" unique_id=1911291443]
 position = Vector2(1440, 620)
-collision_layer = 1
 collision_mask = 7
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="ServerFurniture/CoreTower2"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="ServerFurniture/CoreTower2" unique_id=579949223]
 shape = SubResource("RectangleShape2D_core_tower")
 
-[node name="Visual" type="ColorRect" parent="ServerFurniture/CoreTower2"]
+[node name="Visual" type="ColorRect" parent="ServerFurniture/CoreTower2" unique_id=343903737]
 offset_left = -40.0
 offset_top = -40.0
 offset_right = 40.0
 offset_bottom = 40.0
 color = Color(0.12, 0.16, 0.22, 1)
 
-[node name="Light1" type="ColorRect" parent="ServerFurniture/CoreTower2"]
+[node name="Light1" type="ColorRect" parent="ServerFurniture/CoreTower2" unique_id=261836127]
 offset_left = -30.0
 offset_top = -30.0
 offset_right = 30.0
 offset_bottom = -24.0
-color = Color(0.0, 0.85, 0.9, 1)
+color = Color(0, 0.85, 0.9, 1)
 
-[node name="Light2" type="ColorRect" parent="ServerFurniture/CoreTower2"]
+[node name="Light2" type="ColorRect" parent="ServerFurniture/CoreTower2" unique_id=755028231]
 offset_left = -30.0
 offset_top = 24.0
 offset_right = 30.0
 offset_bottom = 30.0
 color = Color(0.2, 0.9, 0.3, 1)
 
-[node name="CoreTower3" type="StaticBody2D" parent="ServerFurniture"]
+[node name="CoreTower3" type="StaticBody2D" parent="ServerFurniture" unique_id=1329625555]
 position = Vector2(1120, 820)
-collision_layer = 1
 collision_mask = 7
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="ServerFurniture/CoreTower3"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="ServerFurniture/CoreTower3" unique_id=1479401063]
 shape = SubResource("RectangleShape2D_core_tower")
 
-[node name="Visual" type="ColorRect" parent="ServerFurniture/CoreTower3"]
+[node name="Visual" type="ColorRect" parent="ServerFurniture/CoreTower3" unique_id=425691869]
 offset_left = -40.0
 offset_top = -40.0
 offset_right = 40.0
 offset_bottom = 40.0
 color = Color(0.12, 0.16, 0.22, 1)
 
-[node name="Light1" type="ColorRect" parent="ServerFurniture/CoreTower3"]
+[node name="Light1" type="ColorRect" parent="ServerFurniture/CoreTower3" unique_id=781230371]
 offset_left = -30.0
 offset_top = -30.0
 offset_right = 30.0
 offset_bottom = -24.0
-color = Color(0.0, 0.85, 0.9, 1)
+color = Color(0, 0.85, 0.9, 1)
 
-[node name="Light2" type="ColorRect" parent="ServerFurniture/CoreTower3"]
+[node name="Light2" type="ColorRect" parent="ServerFurniture/CoreTower3" unique_id=808129110]
 offset_left = -30.0
 offset_top = 24.0
 offset_right = 30.0
 offset_bottom = 30.0
 color = Color(0.2, 0.9, 0.3, 1)
 
-[node name="CoreTower4" type="StaticBody2D" parent="ServerFurniture"]
+[node name="CoreTower4" type="StaticBody2D" parent="ServerFurniture" unique_id=1113920574]
 position = Vector2(1440, 820)
-collision_layer = 1
 collision_mask = 7
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="ServerFurniture/CoreTower4"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="ServerFurniture/CoreTower4" unique_id=1121580657]
 shape = SubResource("RectangleShape2D_core_tower")
 
-[node name="Visual" type="ColorRect" parent="ServerFurniture/CoreTower4"]
+[node name="Visual" type="ColorRect" parent="ServerFurniture/CoreTower4" unique_id=411534848]
 offset_left = -40.0
 offset_top = -40.0
 offset_right = 40.0
 offset_bottom = 40.0
 color = Color(0.12, 0.16, 0.22, 1)
 
-[node name="Light1" type="ColorRect" parent="ServerFurniture/CoreTower4"]
+[node name="Light1" type="ColorRect" parent="ServerFurniture/CoreTower4" unique_id=241699339]
 offset_left = -30.0
 offset_top = -30.0
 offset_right = 30.0
 offset_bottom = -24.0
-color = Color(0.0, 0.85, 0.9, 1)
+color = Color(0, 0.85, 0.9, 1)
 
-[node name="Light2" type="ColorRect" parent="ServerFurniture/CoreTower4"]
+[node name="Light2" type="ColorRect" parent="ServerFurniture/CoreTower4" unique_id=1900351310]
 offset_left = -30.0
 offset_top = 24.0
 offset_right = 30.0
 offset_bottom = 30.0
 color = Color(0.2, 0.9, 0.3, 1)
 
-[node name="RackNL1" type="StaticBody2D" parent="ServerFurniture"]
+[node name="RackNL1" type="StaticBody2D" parent="ServerFurniture" unique_id=1674410326]
 position = Vector2(1900, 240)
-collision_layer = 1
 collision_mask = 7
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="ServerFurniture/RackNL1"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="ServerFurniture/RackNL1" unique_id=1914115378]
 shape = SubResource("RectangleShape2D_rack_v240")
 
-[node name="Visual" type="ColorRect" parent="ServerFurniture/RackNL1"]
+[node name="Visual" type="ColorRect" parent="ServerFurniture/RackNL1" unique_id=670124181]
 offset_left = -22.0
 offset_top = -120.0
 offset_right = 22.0
 offset_bottom = 120.0
 color = Color(0.1, 0.13, 0.18, 1)
 
-[node name="Stripe1" type="ColorRect" parent="ServerFurniture/RackNL1"]
+[node name="Stripe1" type="ColorRect" parent="ServerFurniture/RackNL1" unique_id=651862800]
 offset_left = -16.0
 offset_top = -110.0
 offset_right = 16.0
 offset_bottom = -104.0
 color = Color(0.2, 0.8, 0.4, 1)
 
-[node name="Stripe2" type="ColorRect" parent="ServerFurniture/RackNL1"]
+[node name="Stripe2" type="ColorRect" parent="ServerFurniture/RackNL1" unique_id=521098112]
 offset_left = -16.0
 offset_top = 104.0
 offset_right = 16.0
 offset_bottom = 110.0
-color = Color(0.0, 0.7, 0.9, 1)
+color = Color(0, 0.7, 0.9, 1)
 
-[node name="RackNL2" type="StaticBody2D" parent="ServerFurniture"]
+[node name="RackNL2" type="StaticBody2D" parent="ServerFurniture" unique_id=1609895967]
 position = Vector2(2060, 240)
-collision_layer = 1
 collision_mask = 7
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="ServerFurniture/RackNL2"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="ServerFurniture/RackNL2" unique_id=1292259753]
 shape = SubResource("RectangleShape2D_rack_v240")
 
-[node name="Visual" type="ColorRect" parent="ServerFurniture/RackNL2"]
+[node name="Visual" type="ColorRect" parent="ServerFurniture/RackNL2" unique_id=413680801]
 offset_left = -22.0
 offset_top = -120.0
 offset_right = 22.0
 offset_bottom = 120.0
 color = Color(0.1, 0.13, 0.18, 1)
 
-[node name="Stripe1" type="ColorRect" parent="ServerFurniture/RackNL2"]
+[node name="Stripe1" type="ColorRect" parent="ServerFurniture/RackNL2" unique_id=1264403766]
 offset_left = -16.0
 offset_top = -110.0
 offset_right = 16.0
 offset_bottom = -104.0
 color = Color(0.2, 0.8, 0.4, 1)
 
-[node name="Stripe2" type="ColorRect" parent="ServerFurniture/RackNL2"]
+[node name="Stripe2" type="ColorRect" parent="ServerFurniture/RackNL2" unique_id=40419978]
 offset_left = -16.0
 offset_top = 104.0
 offset_right = 16.0
 offset_bottom = 110.0
-color = Color(0.0, 0.7, 0.9, 1)
+color = Color(0, 0.7, 0.9, 1)
 
-[node name="RackNL3" type="StaticBody2D" parent="ServerFurniture"]
+[node name="RackNL3" type="StaticBody2D" parent="ServerFurniture" unique_id=590926510]
 position = Vector2(2220, 240)
-collision_layer = 1
 collision_mask = 7
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="ServerFurniture/RackNL3"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="ServerFurniture/RackNL3" unique_id=1473697171]
 shape = SubResource("RectangleShape2D_rack_v240")
 
-[node name="Visual" type="ColorRect" parent="ServerFurniture/RackNL3"]
+[node name="Visual" type="ColorRect" parent="ServerFurniture/RackNL3" unique_id=1585107115]
 offset_left = -22.0
 offset_top = -120.0
 offset_right = 22.0
 offset_bottom = 120.0
 color = Color(0.1, 0.13, 0.18, 1)
 
-[node name="Stripe1" type="ColorRect" parent="ServerFurniture/RackNL3"]
+[node name="Stripe1" type="ColorRect" parent="ServerFurniture/RackNL3" unique_id=875463350]
 offset_left = -16.0
 offset_top = -110.0
 offset_right = 16.0
 offset_bottom = -104.0
 color = Color(0.2, 0.8, 0.4, 1)
 
-[node name="Stripe2" type="ColorRect" parent="ServerFurniture/RackNL3"]
+[node name="Stripe2" type="ColorRect" parent="ServerFurniture/RackNL3" unique_id=483726266]
 offset_left = -16.0
 offset_top = 104.0
 offset_right = 16.0
 offset_bottom = 110.0
-color = Color(0.0, 0.7, 0.9, 1)
+color = Color(0, 0.7, 0.9, 1)
 
-[node name="RackCL1" type="StaticBody2D" parent="ServerFurniture"]
+[node name="RackCL1" type="StaticBody2D" parent="ServerFurniture" unique_id=1535964166]
 position = Vector2(1900, 720)
-collision_layer = 1
 collision_mask = 7
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="ServerFurniture/RackCL1"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="ServerFurniture/RackCL1" unique_id=1525784116]
 shape = SubResource("RectangleShape2D_rack_v300")
 
-[node name="Visual" type="ColorRect" parent="ServerFurniture/RackCL1"]
+[node name="Visual" type="ColorRect" parent="ServerFurniture/RackCL1" unique_id=761851849]
 offset_left = -22.0
 offset_top = -150.0
 offset_right = 22.0
 offset_bottom = 150.0
 color = Color(0.1, 0.13, 0.18, 1)
 
-[node name="Stripe1" type="ColorRect" parent="ServerFurniture/RackCL1"]
+[node name="Stripe1" type="ColorRect" parent="ServerFurniture/RackCL1" unique_id=193661230]
 offset_left = -16.0
 offset_top = -140.0
 offset_right = 16.0
 offset_bottom = -134.0
 color = Color(0.9, 0.6, 0.1, 1)
 
-[node name="Stripe2" type="ColorRect" parent="ServerFurniture/RackCL1"]
+[node name="Stripe2" type="ColorRect" parent="ServerFurniture/RackCL1" unique_id=647211086]
 offset_left = -16.0
 offset_top = 134.0
 offset_right = 16.0
 offset_bottom = 140.0
-color = Color(0.0, 0.85, 0.9, 1)
+color = Color(0, 0.85, 0.9, 1)
 
-[node name="RackCL2" type="StaticBody2D" parent="ServerFurniture"]
+[node name="RackCL2" type="StaticBody2D" parent="ServerFurniture" unique_id=2037781691]
 position = Vector2(2060, 720)
-collision_layer = 1
 collision_mask = 7
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="ServerFurniture/RackCL2"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="ServerFurniture/RackCL2" unique_id=1632716119]
 shape = SubResource("RectangleShape2D_rack_v300")
 
-[node name="Visual" type="ColorRect" parent="ServerFurniture/RackCL2"]
+[node name="Visual" type="ColorRect" parent="ServerFurniture/RackCL2" unique_id=2101042692]
 offset_left = -22.0
 offset_top = -150.0
 offset_right = 22.0
 offset_bottom = 150.0
 color = Color(0.1, 0.13, 0.18, 1)
 
-[node name="Stripe1" type="ColorRect" parent="ServerFurniture/RackCL2"]
+[node name="Stripe1" type="ColorRect" parent="ServerFurniture/RackCL2" unique_id=283391992]
 offset_left = -16.0
 offset_top = -140.0
 offset_right = 16.0
 offset_bottom = -134.0
 color = Color(0.9, 0.6, 0.1, 1)
 
-[node name="Stripe2" type="ColorRect" parent="ServerFurniture/RackCL2"]
+[node name="Stripe2" type="ColorRect" parent="ServerFurniture/RackCL2" unique_id=215870910]
 offset_left = -16.0
 offset_top = 134.0
 offset_right = 16.0
 offset_bottom = 140.0
-color = Color(0.0, 0.85, 0.9, 1)
+color = Color(0, 0.85, 0.9, 1)
 
-[node name="RackCL3" type="StaticBody2D" parent="ServerFurniture"]
+[node name="RackCL3" type="StaticBody2D" parent="ServerFurniture" unique_id=486792045]
 position = Vector2(2220, 720)
-collision_layer = 1
 collision_mask = 7
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="ServerFurniture/RackCL3"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="ServerFurniture/RackCL3" unique_id=1997319392]
 shape = SubResource("RectangleShape2D_rack_v300")
 
-[node name="Visual" type="ColorRect" parent="ServerFurniture/RackCL3"]
+[node name="Visual" type="ColorRect" parent="ServerFurniture/RackCL3" unique_id=2004704267]
 offset_left = -22.0
 offset_top = -150.0
 offset_right = 22.0
 offset_bottom = 150.0
 color = Color(0.1, 0.13, 0.18, 1)
 
-[node name="Stripe1" type="ColorRect" parent="ServerFurniture/RackCL3"]
+[node name="Stripe1" type="ColorRect" parent="ServerFurniture/RackCL3" unique_id=2087252655]
 offset_left = -16.0
 offset_top = -140.0
 offset_right = 16.0
 offset_bottom = -134.0
 color = Color(0.9, 0.6, 0.1, 1)
 
-[node name="Stripe2" type="ColorRect" parent="ServerFurniture/RackCL3"]
+[node name="Stripe2" type="ColorRect" parent="ServerFurniture/RackCL3" unique_id=1869112428]
 offset_left = -16.0
 offset_top = 134.0
 offset_right = 16.0
 offset_bottom = 140.0
-color = Color(0.0, 0.85, 0.9, 1)
+color = Color(0, 0.85, 0.9, 1)
 
-[node name="RackSL1" type="StaticBody2D" parent="ServerFurniture"]
+[node name="RackSL1" type="StaticBody2D" parent="ServerFurniture" unique_id=2136268843]
 position = Vector2(1900, 1200)
-collision_layer = 1
 collision_mask = 7
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="ServerFurniture/RackSL1"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="ServerFurniture/RackSL1" unique_id=1980504833]
 shape = SubResource("RectangleShape2D_rack_v240")
 
-[node name="Visual" type="ColorRect" parent="ServerFurniture/RackSL1"]
+[node name="Visual" type="ColorRect" parent="ServerFurniture/RackSL1" unique_id=1800141556]
 offset_left = -22.0
 offset_top = -120.0
 offset_right = 22.0
 offset_bottom = 120.0
 color = Color(0.1, 0.13, 0.18, 1)
 
-[node name="Stripe1" type="ColorRect" parent="ServerFurniture/RackSL1"]
+[node name="Stripe1" type="ColorRect" parent="ServerFurniture/RackSL1" unique_id=1801433690]
 offset_left = -16.0
 offset_top = -110.0
 offset_right = 16.0
 offset_bottom = -104.0
 color = Color(0.2, 0.8, 0.4, 1)
 
-[node name="Stripe2" type="ColorRect" parent="ServerFurniture/RackSL1"]
+[node name="Stripe2" type="ColorRect" parent="ServerFurniture/RackSL1" unique_id=831247830]
 offset_left = -16.0
 offset_top = 104.0
 offset_right = 16.0
 offset_bottom = 110.0
-color = Color(0.0, 0.7, 0.9, 1)
+color = Color(0, 0.7, 0.9, 1)
 
-[node name="RackSL2" type="StaticBody2D" parent="ServerFurniture"]
+[node name="RackSL2" type="StaticBody2D" parent="ServerFurniture" unique_id=172829254]
 position = Vector2(2060, 1200)
-collision_layer = 1
 collision_mask = 7
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="ServerFurniture/RackSL2"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="ServerFurniture/RackSL2" unique_id=76265820]
 shape = SubResource("RectangleShape2D_rack_v240")
 
-[node name="Visual" type="ColorRect" parent="ServerFurniture/RackSL2"]
+[node name="Visual" type="ColorRect" parent="ServerFurniture/RackSL2" unique_id=1711383068]
 offset_left = -22.0
 offset_top = -120.0
 offset_right = 22.0
 offset_bottom = 120.0
 color = Color(0.1, 0.13, 0.18, 1)
 
-[node name="Stripe1" type="ColorRect" parent="ServerFurniture/RackSL2"]
+[node name="Stripe1" type="ColorRect" parent="ServerFurniture/RackSL2" unique_id=532598491]
 offset_left = -16.0
 offset_top = -110.0
 offset_right = 16.0
 offset_bottom = -104.0
 color = Color(0.2, 0.8, 0.4, 1)
 
-[node name="Stripe2" type="ColorRect" parent="ServerFurniture/RackSL2"]
+[node name="Stripe2" type="ColorRect" parent="ServerFurniture/RackSL2" unique_id=1544508402]
 offset_left = -16.0
 offset_top = 104.0
 offset_right = 16.0
 offset_bottom = 110.0
-color = Color(0.0, 0.7, 0.9, 1)
+color = Color(0, 0.7, 0.9, 1)
 
-[node name="RackSL3" type="StaticBody2D" parent="ServerFurniture"]
+[node name="RackSL3" type="StaticBody2D" parent="ServerFurniture" unique_id=1922500603]
 position = Vector2(2220, 1200)
-collision_layer = 1
 collision_mask = 7
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="ServerFurniture/RackSL3"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="ServerFurniture/RackSL3" unique_id=305668467]
 shape = SubResource("RectangleShape2D_rack_v240")
 
-[node name="Visual" type="ColorRect" parent="ServerFurniture/RackSL3"]
+[node name="Visual" type="ColorRect" parent="ServerFurniture/RackSL3" unique_id=1061557775]
 offset_left = -22.0
 offset_top = -120.0
 offset_right = 22.0
 offset_bottom = 120.0
 color = Color(0.1, 0.13, 0.18, 1)
 
-[node name="Stripe1" type="ColorRect" parent="ServerFurniture/RackSL3"]
+[node name="Stripe1" type="ColorRect" parent="ServerFurniture/RackSL3" unique_id=403211847]
 offset_left = -16.0
 offset_top = -110.0
 offset_right = 16.0
 offset_bottom = -104.0
 color = Color(0.2, 0.8, 0.4, 1)
 
-[node name="Stripe2" type="ColorRect" parent="ServerFurniture/RackSL3"]
+[node name="Stripe2" type="ColorRect" parent="ServerFurniture/RackSL3" unique_id=1301301369]
 offset_left = -16.0
 offset_top = 104.0
 offset_right = 16.0
 offset_bottom = 110.0
-color = Color(0.0, 0.7, 0.9, 1)
+color = Color(0, 0.7, 0.9, 1)
 
-[node name="NOC_ConsoleTop" type="StaticBody2D" parent="ServerFurniture"]
+[node name="NOC_ConsoleTop" type="StaticBody2D" parent="ServerFurniture" unique_id=1487435814]
 position = Vector2(480, 600)
-collision_layer = 1
 collision_mask = 7
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="ServerFurniture/NOC_ConsoleTop"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="ServerFurniture/NOC_ConsoleTop" unique_id=345327489]
 shape = SubResource("RectangleShape2D_noc_console")
 
-[node name="Visual" type="ColorRect" parent="ServerFurniture/NOC_ConsoleTop"]
+[node name="Visual" type="ColorRect" parent="ServerFurniture/NOC_ConsoleTop" unique_id=1110533890]
 offset_left = -150.0
 offset_top = -24.0
 offset_right = 150.0
 offset_bottom = 24.0
 color = Color(0.16, 0.22, 0.3, 1)
 
-[node name="Monitor1" type="ColorRect" parent="ServerFurniture/NOC_ConsoleTop"]
+[node name="Monitor1" type="ColorRect" parent="ServerFurniture/NOC_ConsoleTop" unique_id=1984064354]
 offset_left = -120.0
 offset_top = -16.0
 offset_right = -60.0
 offset_bottom = 16.0
-color = Color(0.0, 0.7, 0.9, 0.7)
+color = Color(0, 0.7, 0.9, 0.7)
 
-[node name="Monitor2" type="ColorRect" parent="ServerFurniture/NOC_ConsoleTop"]
+[node name="Monitor2" type="ColorRect" parent="ServerFurniture/NOC_ConsoleTop" unique_id=2025612557]
 offset_left = 60.0
 offset_top = -16.0
 offset_right = 120.0
 offset_bottom = 16.0
-color = Color(0.0, 0.7, 0.9, 0.7)
+color = Color(0, 0.7, 0.9, 0.7)
 
-[node name="NOC_ConsoleBottom" type="StaticBody2D" parent="ServerFurniture"]
+[node name="NOC_ConsoleBottom" type="StaticBody2D" parent="ServerFurniture" unique_id=744234269]
 position = Vector2(480, 840)
-collision_layer = 1
 collision_mask = 7
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="ServerFurniture/NOC_ConsoleBottom"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="ServerFurniture/NOC_ConsoleBottom" unique_id=573976041]
 shape = SubResource("RectangleShape2D_noc_console")
 
-[node name="Visual" type="ColorRect" parent="ServerFurniture/NOC_ConsoleBottom"]
+[node name="Visual" type="ColorRect" parent="ServerFurniture/NOC_ConsoleBottom" unique_id=984904730]
 offset_left = -150.0
 offset_top = -24.0
 offset_right = 150.0
 offset_bottom = 24.0
 color = Color(0.16, 0.22, 0.3, 1)
 
-[node name="Monitor1" type="ColorRect" parent="ServerFurniture/NOC_ConsoleBottom"]
+[node name="Monitor1" type="ColorRect" parent="ServerFurniture/NOC_ConsoleBottom" unique_id=628474498]
 offset_left = -120.0
 offset_top = -16.0
 offset_right = -60.0
 offset_bottom = 16.0
-color = Color(0.0, 0.7, 0.9, 0.7)
+color = Color(0, 0.7, 0.9, 0.7)
 
-[node name="Monitor2" type="ColorRect" parent="ServerFurniture/NOC_ConsoleBottom"]
+[node name="Monitor2" type="ColorRect" parent="ServerFurniture/NOC_ConsoleBottom" unique_id=431600418]
 offset_left = 60.0
 offset_top = -16.0
 offset_right = 120.0
 offset_bottom = 16.0
-color = Color(0.0, 0.7, 0.9, 0.7)
+color = Color(0, 0.7, 0.9, 0.7)
 
-[node name="NOC_Wallboard" type="StaticBody2D" parent="ServerFurniture"]
+[node name="NOC_Wallboard" type="StaticBody2D" parent="ServerFurniture" unique_id=105532093]
 position = Vector2(180, 720)
-collision_layer = 1
 collision_mask = 7
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="ServerFurniture/NOC_Wallboard"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="ServerFurniture/NOC_Wallboard" unique_id=1811855581]
 shape = SubResource("RectangleShape2D_noc_wallboard")
 
-[node name="Visual" type="ColorRect" parent="ServerFurniture/NOC_Wallboard"]
+[node name="Visual" type="ColorRect" parent="ServerFurniture/NOC_Wallboard" unique_id=1898617339]
 offset_left = -15.0
 offset_top = -130.0
 offset_right = 15.0
 offset_bottom = 130.0
 color = Color(0.05, 0.3, 0.5, 1)
 
-[node name="Workbench1" type="StaticBody2D" parent="ServerFurniture"]
+[node name="Workbench1" type="StaticBody2D" parent="ServerFurniture" unique_id=732841813]
 position = Vector2(380, 220)
-collision_layer = 1
 collision_mask = 7
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="ServerFurniture/Workbench1"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="ServerFurniture/Workbench1" unique_id=2028409084]
 shape = SubResource("RectangleShape2D_workbench")
 
-[node name="Visual" type="ColorRect" parent="ServerFurniture/Workbench1"]
+[node name="Visual" type="ColorRect" parent="ServerFurniture/Workbench1" unique_id=951898187]
 offset_left = -100.0
 offset_top = -28.0
 offset_right = 100.0
 offset_bottom = 28.0
 color = Color(0.22, 0.28, 0.36, 1)
 
-[node name="Workbench2" type="StaticBody2D" parent="ServerFurniture"]
+[node name="Workbench2" type="StaticBody2D" parent="ServerFurniture" unique_id=1220431963]
 position = Vector2(680, 220)
-collision_layer = 1
 collision_mask = 7
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="ServerFurniture/Workbench2"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="ServerFurniture/Workbench2" unique_id=1329008239]
 shape = SubResource("RectangleShape2D_workbench")
 
-[node name="Visual" type="ColorRect" parent="ServerFurniture/Workbench2"]
+[node name="Visual" type="ColorRect" parent="ServerFurniture/Workbench2" unique_id=1771753502]
 offset_left = -100.0
 offset_top = -28.0
 offset_right = 100.0
 offset_bottom = 28.0
 color = Color(0.22, 0.28, 0.36, 1)
 
-[node name="CabinetNW" type="StaticBody2D" parent="ServerFurniture"]
+[node name="CabinetNW" type="StaticBody2D" parent="ServerFurniture" unique_id=1047109057]
 position = Vector2(140, 220)
-collision_layer = 1
 collision_mask = 7
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="ServerFurniture/CabinetNW"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="ServerFurniture/CabinetNW" unique_id=743520814]
 shape = SubResource("RectangleShape2D_cabinet")
 
-[node name="Visual" type="ColorRect" parent="ServerFurniture/CabinetNW"]
+[node name="Visual" type="ColorRect" parent="ServerFurniture/CabinetNW" unique_id=1809350931]
 offset_left = -20.0
 offset_top = -90.0
 offset_right = 20.0
 offset_bottom = 90.0
 color = Color(0.12, 0.16, 0.24, 1)
 
-[node name="Chiller1" type="StaticBody2D" parent="ServerFurniture"]
+[node name="Chiller1" type="StaticBody2D" parent="ServerFurniture" unique_id=1881088059]
 position = Vector2(360, 1220)
-collision_layer = 1
 collision_mask = 7
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="ServerFurniture/Chiller1"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="ServerFurniture/Chiller1" unique_id=14873947]
 shape = SubResource("RectangleShape2D_chiller")
 
-[node name="Visual" type="ColorRect" parent="ServerFurniture/Chiller1"]
+[node name="Visual" type="ColorRect" parent="ServerFurniture/Chiller1" unique_id=12454214]
 offset_left = -80.0
 offset_top = -40.0
 offset_right = 80.0
 offset_bottom = 40.0
 color = Color(0.15, 0.2, 0.3, 1)
 
-[node name="Vent" type="ColorRect" parent="ServerFurniture/Chiller1"]
+[node name="Vent" type="ColorRect" parent="ServerFurniture/Chiller1" unique_id=1430877330]
 offset_left = -60.0
 offset_top = -20.0
 offset_right = 60.0
 offset_bottom = 20.0
 color = Color(0.08, 0.12, 0.18, 1)
 
-[node name="Chiller2" type="StaticBody2D" parent="ServerFurniture"]
+[node name="Chiller2" type="StaticBody2D" parent="ServerFurniture" unique_id=1071573884]
 position = Vector2(660, 1220)
-collision_layer = 1
 collision_mask = 7
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="ServerFurniture/Chiller2"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="ServerFurniture/Chiller2" unique_id=2000831998]
 shape = SubResource("RectangleShape2D_chiller")
 
-[node name="Visual" type="ColorRect" parent="ServerFurniture/Chiller2"]
+[node name="Visual" type="ColorRect" parent="ServerFurniture/Chiller2" unique_id=792960675]
 offset_left = -80.0
 offset_top = -40.0
 offset_right = 80.0
 offset_bottom = 40.0
 color = Color(0.15, 0.2, 0.3, 1)
 
-[node name="Vent" type="ColorRect" parent="ServerFurniture/Chiller2"]
+[node name="Vent" type="ColorRect" parent="ServerFurniture/Chiller2" unique_id=1425952511]
 offset_left = -60.0
 offset_top = -20.0
 offset_right = 60.0
 offset_bottom = 20.0
 color = Color(0.08, 0.12, 0.18, 1)
 
-[node name="CabinetSW" type="StaticBody2D" parent="ServerFurniture"]
+[node name="CabinetSW" type="StaticBody2D" parent="ServerFurniture" unique_id=1160635964]
 position = Vector2(140, 1220)
-collision_layer = 1
 collision_mask = 7
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="ServerFurniture/CabinetSW"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="ServerFurniture/CabinetSW" unique_id=1125876175]
 shape = SubResource("RectangleShape2D_cabinet")
 
-[node name="Visual" type="ColorRect" parent="ServerFurniture/CabinetSW"]
+[node name="Visual" type="ColorRect" parent="ServerFurniture/CabinetSW" unique_id=389175530]
 offset_left = -20.0
 offset_top = -90.0
 offset_right = 20.0
 offset_bottom = 90.0
 color = Color(0.12, 0.16, 0.24, 1)
 
-[node name="GuardDeskNorth" type="StaticBody2D" parent="ServerFurniture"]
+[node name="GuardDeskNorth" type="StaticBody2D" parent="ServerFurniture" unique_id=470540354]
 position = Vector2(1280, 320)
-collision_layer = 1
 collision_mask = 7
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="ServerFurniture/GuardDeskNorth"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="ServerFurniture/GuardDeskNorth" unique_id=364546023]
 shape = SubResource("RectangleShape2D_guard_desk")
 
-[node name="Visual" type="ColorRect" parent="ServerFurniture/GuardDeskNorth"]
+[node name="Visual" type="ColorRect" parent="ServerFurniture/GuardDeskNorth" unique_id=151831079]
 offset_left = -60.0
 offset_top = -18.0
 offset_right = 60.0
 offset_bottom = 18.0
 color = Color(0.2, 0.25, 0.35, 1)
 
-[node name="GuardDeskSouth" type="StaticBody2D" parent="ServerFurniture"]
+[node name="GuardDeskSouth" type="StaticBody2D" parent="ServerFurniture" unique_id=600338800]
 position = Vector2(1280, 1120)
-collision_layer = 1
 collision_mask = 7
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="ServerFurniture/GuardDeskSouth"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="ServerFurniture/GuardDeskSouth" unique_id=24170719]
 shape = SubResource("RectangleShape2D_guard_desk")
 
-[node name="Visual" type="ColorRect" parent="ServerFurniture/GuardDeskSouth"]
+[node name="Visual" type="ColorRect" parent="ServerFurniture/GuardDeskSouth" unique_id=1125963956]
 offset_left = -60.0
 offset_top = -18.0
 offset_right = 60.0
 offset_bottom = 18.0
 color = Color(0.2, 0.25, 0.35, 1)
 
-[node name="RebootZone" parent="." instance=ExtResource("2_reboot")]
+[node name="RebootZone" parent="." unique_id=956237073 instance=ExtResource("2_reboot")]
 position = Vector2(1280, 720)
 
-[node name="DeployBoxes" type="Node2D" parent="."]
+[node name="DeployBoxes" type="Node2D" parent="." unique_id=1085483929]
 
-[node name="DeployBox1" parent="DeployBoxes" instance=ExtResource("3_box")]
+[node name="DeployBox1" parent="DeployBoxes" unique_id=713044543 instance=ExtResource("3_box")]
 position = Vector2(480, 220)
 
-[node name="DeployBox2" parent="DeployBoxes" instance=ExtResource("3_box")]
+[node name="DeployBox2" parent="DeployBoxes" unique_id=1469933575 instance=ExtResource("3_box")]
 position = Vector2(2060, 240)
 
-[node name="DeployBox3" parent="DeployBoxes" instance=ExtResource("3_box")]
+[node name="DeployBox3" parent="DeployBoxes" unique_id=1673496381 instance=ExtResource("3_box")]
 position = Vector2(480, 720)
 
-[node name="DeployBox4" parent="DeployBoxes" instance=ExtResource("3_box")]
+[node name="DeployBox4" parent="DeployBoxes" unique_id=1976966320 instance=ExtResource("3_box")]
 position = Vector2(1280, 720)
 
-[node name="DeployBox5" parent="DeployBoxes" instance=ExtResource("3_box")]
+[node name="DeployBox5" parent="DeployBoxes" unique_id=71353265 instance=ExtResource("3_box")]
 position = Vector2(2060, 720)
 
-[node name="DeployBox6" parent="DeployBoxes" instance=ExtResource("3_box")]
+[node name="DeployBox6" parent="DeployBoxes" unique_id=1595386802 instance=ExtResource("3_box")]
 position = Vector2(480, 1220)
 
-[node name="DeployBox7" parent="DeployBoxes" instance=ExtResource("3_box")]
+[node name="DeployBox7" parent="DeployBoxes" unique_id=1967744935 instance=ExtResource("3_box")]
 position = Vector2(2060, 1200)
 
-[node name="DeployBox8" parent="DeployBoxes" instance=ExtResource("3_box")]
+[node name="DeployBox8" parent="DeployBoxes" unique_id=686125516 instance=ExtResource("3_box")]
 position = Vector2(1280, 200)
 
-[node name="Spawns" type="Node2D" parent="."]
+[node name="Spawns" type="Node2D" parent="." unique_id=1053703984]
 
-[node name="PlayerSpawn" type="Marker2D" parent="Spawns"]
+[node name="PlayerSpawn" type="Marker2D" parent="Spawns" unique_id=148147941]
 position = Vector2(260, 240)
 
-[node name="BotSpawns" type="Node2D" parent="Spawns"]
+[node name="BotSpawns" type="Node2D" parent="Spawns" unique_id=600219408]
 
-[node name="BotSpawn1" type="Marker2D" parent="Spawns/BotSpawns"]
+[node name="BotSpawn1" type="Marker2D" parent="Spawns/BotSpawns" unique_id=475376290]
 position = Vector2(2300, 240)
 
-[node name="BotSpawn2" type="Marker2D" parent="Spawns/BotSpawns"]
+[node name="BotSpawn2" type="Marker2D" parent="Spawns/BotSpawns" unique_id=1242993082]
 position = Vector2(260, 1200)
 
-[node name="BotSpawn3" type="Marker2D" parent="Spawns/BotSpawns"]
+[node name="BotSpawn3" type="Marker2D" parent="Spawns/BotSpawns" unique_id=397456855]
 position = Vector2(2300, 1200)
 
-[node name="BotSpawn4" type="Marker2D" parent="Spawns/BotSpawns"]
+[node name="BotSpawn4" type="Marker2D" parent="Spawns/BotSpawns" unique_id=1872350144]
 position = Vector2(1280, 200)
 
-[node name="BotSpawn5" type="Marker2D" parent="Spawns/BotSpawns"]
+[node name="BotSpawn5" type="Marker2D" parent="Spawns/BotSpawns" unique_id=2086430743]
 position = Vector2(1280, 1240)
 
-[node name="BotSpawn6" type="Marker2D" parent="Spawns/BotSpawns"]
+[node name="BotSpawn6" type="Marker2D" parent="Spawns/BotSpawns" unique_id=354597211]
 position = Vector2(320, 720)
 
-[node name="BotSpawn7" type="Marker2D" parent="Spawns/BotSpawns"]
+[node name="BotSpawn7" type="Marker2D" parent="Spawns/BotSpawns" unique_id=439530410]
 position = Vector2(2240, 720)
 
-[node name="GameHUD" parent="." instance=ExtResource("4_hud")]
+[node name="GameHUD" parent="." unique_id=669763598 instance=ExtResource("4_hud")]

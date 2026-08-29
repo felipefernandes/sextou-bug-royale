@@ -64,7 +64,7 @@ Este documento estabelece o plano de desenvolvimento em **ondas funcionais e inc
   - Minimapa com área segura da Zona de Reboot.
 - [x] **3.3 Menu Principal & Seleção de Skins:**
   - Menu principal satírico (`MainMenu.tscn`).
-  - Escolha de Skins (Dev, QA, Designer, Analista, PM).
+  - Escolha de Skins (Dev, QA, Designer, Game Designer, Analista, PM).
   - Seletor de Modo (Estagiário Solo vs Bot Copiloto vs Sandbox).
 - [x] **3.4 Efeitos Sonoros & Partículas:**
   - Sons de grampeador, tiros de elástico, aviso de erro 404, derrapagem de rodinhas e explosões de código.
