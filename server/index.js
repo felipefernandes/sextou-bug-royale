@@ -331,7 +331,11 @@ wss.on('connection', (ws) => {
     });
 });
 
-server.listen(PORT, () => {
-    console.log(`🚀 Servidor Sextou: Bug Royale rodando na porta ${PORT}`);
-    console.log(`🔗 Endpoint Handshake: http://localhost:${PORT}/health`);
-});
+if (require.main === module) {
+    server.listen(PORT, () => {
+        console.log(`🚀 Servidor Sextou: Bug Royale rodando na porta ${PORT}`);
+        console.log(`🔗 Endpoint Handshake: http://localhost:${PORT}/health`);
+    });
+}
+
+module.exports = { app, server, wss, roomState };
