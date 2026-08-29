@@ -79,6 +79,11 @@ Ao executar tarefas, assuma as diretrizes das personas conforme a fase:
    - `feat(scope): ...` para novas funcionalidades.
    - `fix(scope): ...` para correções de bugs.
    - `docs(scope): ...` para alterações em documentação.
+4. **Exportação Web Obrigatória para Deploy:**
+   - O projeto não possui CI/CD para compilar o Godot. A Vercel apenas serve a pasta `export/`.
+   - Antes de finalizar um PR que contenha alterações no jogo (`.gd`, `.tscn`, etc), você **deve** atualizar a build Web.
+   - Execute o Godot no modo Headless via console (ex: no Windows, `C:\Godot\Godot_console.exe --headless --export-release "Web" ../export/index.html` rodando de dentro da pasta `sextou-bug-royale/`).
+   - Adicione e faça commit dos arquivos gerados na pasta `export/` junto do seu PR para que a Vercel sirva as últimas alterações.
 
 ---
 
@@ -110,9 +115,11 @@ Ao executar tarefas, assuma as diretrizes das personas conforme a fase:
 9. **Evitar Warning de Divisão Inteira (`INTEGER_DIVISION`):**
    - Use `int(float(a) / float(b))` para divisões inteiras warning-free em GDScript 4.
 10. **Câmera de Espectador Livre:**
-   - Instancie uma `Camera2D` independente ao entrar no modo espectador para liberar a navegação livre pelo mapa e alternância de alvos sobreviventes via `TAB`.
+    - Instancie uma `Camera2D` independente ao entrar no modo espectador para liberar a navegação livre pelo mapa e alternância de alvos sobreviventes via `TAB`.
 11. **Ícones de UI e Emojis em Builds Web (Wasm):**
-   - Nunca dependa de caracteres de emojis do sistema operacional para ícones de interface. No WebAssembly, a engine não tem acesso às fontes do SO hospedeiro, causando renderização monocromática ou ausência de glifos. Use sempre spritesheets de ícones recortados como `AtlasTexture` (.tres) integrados via `OptionButton.add_icon_item()`, `TextureRect` ou BBCode `[img]` em `RichTextLabel`.
-
-
-
+    - Nunca dependa de caracteres de emojis do sistema operacional para ícones de interface. No WebAssembly, a engine não tem acesso às fontes do SO hospedeiro, causando renderização monocromática ou ausência de glifos. Use sempre spritesheets de ícones recortados como `AtlasTexture` (.tres) integrados via `OptionButton.add_icon_item()`, `TextureRect` ou BBCode `[img]` em `RichTextLabel`.
+12. **Multiplayer: Attacker Authority (Autoridade do Atirador):**
+    - Projéteis (`Area2D`, `CharacterBody2D`) NUNCA devem aplicar dano se o atirador (`shooter`) for um `RemotePlayer`. 
+    - O dano só deve ser aplicado localmente se a bala foi instanciada pelo jogador local ou bots locais (`not (shooter is RemotePlayer)`). A vítima apenas sincroniza sua vida (via `sync_hp()`) ao receber o sinal via rede, evitando ecos e loops de dano duplo.
+13. **Sobreposição Exata de Spawns (Clipping Bounds):**
+    - Nunca instancie players no exato mesmo pixel (ex: índice modular de posições fixas com muitos jogadores). O motor de física 2D injetará forças extremas de separação, ejetando-os para fora das paredes do mapa. Sempre aplique um offset determinístico ou randômico.
